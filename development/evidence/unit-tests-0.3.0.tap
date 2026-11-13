@@ -1,0 +1,1019 @@
+
+> saltcorn-piwigo@0.3.0 test
+> node --test test/*.test.js
+
+TAP version 13
+# Subtest: HTTP fixture: pagination, cap, detail, derivative, no writes
+ok 1 - HTTP fixture: pagination, cap, detail, derivative, no writes
+  ---
+  duration_ms: 78.572609
+  ...
+# Subtest: API header and form content
+ok 2 - API header and form content
+  ---
+  duration_ms: 1.17913
+  ...
+# Subtest: write method denied before network
+ok 3 - write method denied before network
+  ---
+  duration_ms: 0.286269
+  ...
+# Subtest: redirect 301 refused
+ok 4 - redirect 301 refused
+  ---
+  duration_ms: 0.448912
+  ...
+# Subtest: redirect 302 refused
+ok 5 - redirect 302 refused
+  ---
+  duration_ms: 0.323822
+  ...
+# Subtest: redirect 307 refused
+ok 6 - redirect 307 refused
+  ---
+  duration_ms: 0.286476
+  ...
+# Subtest: redirect 308 refused
+ok 7 - redirect 308 refused
+  ---
+  duration_ms: 0.397556
+  ...
+# Subtest: HTTP 401 sanitized
+ok 8 - HTTP 401 sanitized
+  ---
+  duration_ms: 0.54768
+  ...
+# Subtest: HTTP 403 sanitized
+ok 9 - HTTP 403 sanitized
+  ---
+  duration_ms: 0.474559
+  ...
+# Subtest: HTTP 500 sanitized
+ok 10 - HTTP 500 sanitized
+  ---
+  duration_ms: 0.457962
+  ...
+# Subtest: Piwigo error message sanitized
+ok 11 - Piwigo error message sanitized
+  ---
+  duration_ms: 0.768707
+  ...
+# Subtest: invalid JSON handled
+ok 12 - invalid JSON handled
+  ---
+  duration_ms: 0.62444
+  ...
+# Subtest: missing paging fails
+ok 13 - missing paging fails
+  ---
+  duration_ms: 0.922874
+  ...
+# Subtest: wrong returned page fails
+ok 14 - wrong returned page fails
+  ---
+  duration_ms: 0.884839
+  ...
+# Subtest: duplicate images fail
+ok 15 - duplicate images fail
+  ---
+  duration_ms: 2.829898
+  ...
+# Subtest: detail wrong id fails
+ok 16 - detail wrong id fails
+  ---
+  duration_ms: 0.601326
+  ...
+# Subtest: SVG preview rejected
+ok 17 - SVG preview rejected
+  ---
+  duration_ms: 0.646048
+  ...
+# Subtest: no original fallback
+ok 18 - no original fallback
+  ---
+  duration_ms: 0.344433
+  ...
+# Subtest: response byte limit
+ok 19 - response byte limit
+  ---
+  duration_ms: 0.40893
+  ...
+# Subtest: content length limit
+ok 20 - content length limit
+  ---
+  duration_ms: 0.308639
+  ...
+# Subtest: network error redacted
+ok 21 - network error redacted
+  ---
+  duration_ms: 0.407857
+  ...
+# Subtest: timeout abort handled
+ok 22 - timeout abort handled
+  ---
+  duration_ms: 1000.927072
+  ...
+# Subtest: configured key works with no environment
+ok 23 - configured key works with no environment
+  ---
+  duration_ms: 1.635024
+  ...
+# Subtest: configured key has precedence over environment
+ok 24 - configured key has precedence over environment
+  ---
+  duration_ms: 0.212986
+  ...
+# Subtest: unused environment name does not block configured key
+ok 25 - unused environment name does not block configured key
+  ---
+  duration_ms: 0.140216
+  ...
+# Subtest: empty configured key preserves environment mode: undefined
+ok 26 - empty configured key preserves environment mode: undefined
+  ---
+  duration_ms: 0.164446
+  ...
+# Subtest: empty configured key preserves environment mode: null
+ok 27 - empty configured key preserves environment mode: null
+  ---
+  duration_ms: 0.190667
+  ...
+# Subtest: empty configured key preserves environment mode: ""
+ok 28 - empty configured key preserves environment mode: ""
+  ---
+  duration_ms: 0.10255
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 1)
+ok 29 - invalid configured key rejected without echo or fallback (string, length 1)
+  ---
+  duration_ms: 0.463442
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 15)
+ok 30 - invalid configured key rejected without echo or fallback (string, length 15)
+  ---
+  duration_ms: 0.207847
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 4)
+ok 31 - invalid configured key rejected without echo or fallback (string, length 4)
+  ---
+  duration_ms: 0.235678
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 11)
+ok 32 - invalid configured key rejected without echo or fallback (string, length 11)
+  ---
+  duration_ms: 0.215964
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 4)
+ok 33 - invalid configured key rejected without echo or fallback (string, length 4)
+  ---
+  duration_ms: 0.134025
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 4)
+ok 34 - invalid configured key rejected without echo or fallback (string, length 4)
+  ---
+  duration_ms: 0.150234
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 4)
+ok 35 - invalid configured key rejected without echo or fallback (string, length 4)
+  ---
+  duration_ms: 0.116643
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 4)
+ok 36 - invalid configured key rejected without echo or fallback (string, length 4)
+  ---
+  duration_ms: 0.190188
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (number, length 2)
+ok 37 - invalid configured key rejected without echo or fallback (number, length 2)
+  ---
+  duration_ms: 0.104825
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (boolean, length 4)
+ok 38 - invalid configured key rejected without echo or fallback (boolean, length 4)
+  ---
+  duration_ms: 0.15483
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (object, length 15)
+ok 39 - invalid configured key rejected without echo or fallback (object, length 15)
+  ---
+  duration_ms: 0.107248
+  ...
+# Subtest: invalid configured key rejected without echo or fallback (string, length 4097)
+ok 40 - invalid configured key rejected without echo or fallback (string, length 4097)
+  ---
+  duration_ms: 0.264833
+  ...
+# Subtest: configured key reaches header, not request URL/body or returned diagnostic
+ok 41 - configured key reaches header, not request URL/body or returned diagnostic
+  ---
+  duration_ms: 20.618768
+  ...
+# Subtest: upstream key echo is not exposed in API errors; no retry with environment key
+ok 42 - upstream key echo is not exposed in API errors; no retry with environment key
+  ---
+  duration_ms: 0.914969
+  ...
+# Subtest: configured key authenticates to HTTP fixture with empty environment
+ok 43 - configured key authenticates to HTTP fixture with empty environment
+  ---
+  duration_ms: 63.224494
+  ...
+# Subtest: valid positive IDs
+ok 44 - valid positive IDs
+  ---
+  duration_ms: 1.234439
+  ...
+# Subtest: reject invalid ID null
+ok 45 - reject invalid ID null
+  ---
+  duration_ms: 0.296527
+  ...
+# Subtest: reject invalid ID undefined
+ok 46 - reject invalid ID undefined
+  ---
+  duration_ms: 0.100836
+  ...
+# Subtest: reject invalid ID ""
+ok 47 - reject invalid ID ""
+  ---
+  duration_ms: 0.092102
+  ...
+# Subtest: reject invalid ID -1
+ok 48 - reject invalid ID -1
+  ---
+  duration_ms: 0.099218
+  ...
+# Subtest: reject invalid ID 0
+ok 49 - reject invalid ID 0
+  ---
+  duration_ms: 0.081372
+  ...
+# Subtest: reject invalid ID "1e2"
+ok 50 - reject invalid ID "1e2"
+  ---
+  duration_ms: 0.156305
+  ...
+# Subtest: reject invalid ID "1.2"
+ok 51 - reject invalid ID "1.2"
+  ---
+  duration_ms: 0.088057
+  ...
+# Subtest: reject invalid ID "42 OR 1=1"
+ok 52 - reject invalid ID "42 OR 1=1"
+  ---
+  duration_ms: 0.180734
+  ...
+# Subtest: reject invalid ID {}
+ok 53 - reject invalid ID {}
+  ---
+  duration_ms: 0.160349
+  ...
+# Subtest: reject invalid ID []
+ok 54 - reject invalid ID []
+  ---
+  duration_ms: 0.108433
+  ...
+# Subtest: reject invalid ID "9007199254740992"
+ok 55 - reject invalid ID "9007199254740992"
+  ---
+  duration_ms: 0.089868
+  ...
+# Subtest: page zero allowed
+ok 56 - page zero allowed
+  ---
+  duration_ms: 0.154622
+  ...
+# Subtest: anonymous access denied
+ok 57 - anonymous access denied
+  ---
+  duration_ms: 0.385707
+  ...
+# Subtest: public role denied even with id
+ok 58 - public role denied even with id
+  ---
+  duration_ms: 0.164289
+  ...
+# Subtest: string role fail closed
+ok 59 - string role fail closed
+  ---
+  duration_ms: 0.196206
+  ...
+# Subtest: role threshold honored
+ok 60 - role threshold honored
+  ---
+  duration_ms: 0.12172
+  ...
+# Subtest: standard Saltcorn user role 80 allowed by default
+ok 61 - standard Saltcorn user role 80 allowed by default
+  ---
+  duration_ms: 0.187059
+  ...
+# Subtest: mapping uses row ID not facility label
+ok 62 - mapping uses row ID not facility label
+  ---
+  duration_ms: 0.231818
+  ...
+# Subtest: reject mapping null
+ok 63 - reject mapping null
+  ---
+  duration_ms: 0.196376
+  ...
+# Subtest: reject mapping []
+ok 64 - reject mapping []
+  ---
+  duration_ms: 0.087628
+  ...
+# Subtest: reject mapping not json
+ok 65 - reject mapping not json
+  ---
+  duration_ms: 0.088679
+  ...
+# Subtest: reject mapping {"42":"abc"}
+ok 66 - reject mapping {"42":"abc"}
+  ---
+  duration_ms: 0.079378
+  ...
+# Subtest: reject mapping {"42":123,"43":123}
+ok 67 - reject mapping {"42":123,"43":123}
+  ---
+  duration_ms: 0.078136
+  ...
+# Subtest: reject mapping {"042":123,"42":456}
+ok 68 - reject mapping {"042":123,"42":456}
+  ---
+  duration_ms: 0.105847
+  ...
+# Subtest: reject mapping {"__proto__":123}
+ok 69 - reject mapping {"__proto__":123}
+  ---
+  duration_ms: 0.07233
+  ...
+# Subtest: ownership context passed to Saltcorn
+ok 70 - ownership context passed to Saltcorn
+  ---
+  duration_ms: 0.869389
+  ...
+# Subtest: missing row denied before mapping
+ok 71 - missing row denied before mapping
+  ---
+  duration_ms: 0.237537
+  ...
+# Subtest: missing mapping never loads all photos
+ok 72 - missing mapping never loads all photos
+  ---
+  duration_ms: 1.068642
+  ...
+# Subtest: body cannot select another tag
+ok 73 - body cannot select another tag
+  ---
+  duration_ms: 0.161463
+  ...
+# Subtest: membership matches numeric ID
+ok 74 - membership matches numeric ID
+  ---
+  duration_ms: 0.130419
+  ...
+# Subtest: missing membership fails
+ok 75 - missing membership fails
+  ---
+  duration_ms: 0.154619
+  ...
+# Subtest: HTML escaping
+ok 76 - HTML escaping
+  ---
+  duration_ms: 0.222884
+  ...
+# Subtest: unknown errors do not leak details
+ok 77 - unknown errors do not leak details
+  ---
+  duration_ms: 0.189707
+  ...
+# Subtest: HTTPS required by default
+ok 78 - HTTPS required by default
+  ---
+  duration_ms: 0.150966
+  ...
+# Subtest: explicit HTTP test mode
+ok 79 - explicit HTTP test mode
+  ---
+  duration_ms: 0.144594
+  ...
+# Subtest: reject base https://user:password@example.org/
+ok 80 - reject base https://user:password@example.org/
+  ---
+  duration_ms: 0.141867
+  ...
+# Subtest: reject base https://example.org/?a=b
+ok 81 - reject base https://example.org/?a=b
+  ---
+  duration_ms: 0.089449
+  ...
+# Subtest: reject base https://example.org/\#x
+ok 82 - reject base https://example.org/\#x
+  ---
+  duration_ms: 0.09482
+  ...
+# Subtest: reject base file:///tmp/x
+ok 83 - reject base file:///tmp/x
+  ---
+  duration_ms: 0.075087
+  ...
+# Subtest: reject media https://evil.org/a.jpg
+ok 84 - reject media https://evil.org/a.jpg
+  ---
+  duration_ms: 0.235738
+  ...
+# Subtest: reject media http://example.org/gallery/a.jpg
+ok 85 - reject media http://example.org/gallery/a.jpg
+  ---
+  duration_ms: 0.090822
+  ...
+# Subtest: reject media /outside/a.jpg
+ok 86 - reject media /outside/a.jpg
+  ---
+  duration_ms: 0.129676
+  ...
+# Subtest: reject media /gallery/../a.jpg
+ok 87 - reject media /gallery/../a.jpg
+  ---
+  duration_ms: 0.143845
+  ...
+# Subtest: reject media /gallery/%2fsecret
+ok 88 - reject media /gallery/%2fsecret
+  ---
+  duration_ms: 0.203775
+  ...
+# Subtest: reject media https://user:pw@example.org/gallery/a.jpg
+ok 89 - reject media https://user:pw@example.org/gallery/a.jpg
+  ---
+  duration_ms: 0.092681
+  ...
+# Subtest: reject media //evil.org/a.jpg
+ok 90 - reject media //evil.org/a.jpg
+  ---
+  duration_ms: 0.081409
+  ...
+# Subtest: same instance derivative accepted
+ok 91 - same instance derivative accepted
+  ---
+  duration_ms: 0.214942
+  ...
+# Subtest: write methods absent
+ok 92 - write methods absent
+  ---
+  duration_ms: 0.122469
+  ...
+# Subtest: without configured key an environment key is required
+ok 93 - without configured key an environment key is required
+  ---
+  duration_ms: 0.253767
+  ...
+# Subtest: CRLF key rejected
+ok 94 - CRLF key rejected
+  ---
+  duration_ms: 0.266768
+  ...
+# Subtest: UI escapes titles and script contexts
+ok 95 - UI escapes titles and script contexts
+  ---
+  duration_ms: 0.676665
+  ...
+# Subtest: UI has no API credential configuration
+ok 96 - UI has no API credential configuration
+  ---
+  duration_ms: 0.210758
+  ...
+# Subtest: diagnostic restricted to Saltcorn admin
+ok 97 - diagnostic restricted to Saltcorn admin
+  ---
+  duration_ms: 1.058221
+  ...
+# Subtest: removed tag blocks detail and media
+ok 98 - removed tag blocks detail and media
+  ---
+  duration_ms: 0.548287
+  ...
+# Subtest: metadata omits other Facility tags and URLs
+ok 99 - metadata omits other Facility tags and URLs
+  ---
+  duration_ms: 0.406888
+  ...
+# Subtest: unknown sorting rejected
+ok 100 - unknown sorting rejected
+  ---
+  duration_ms: 0.265785
+  ...
+# Subtest: all four sorts and configured page size forwarded
+ok 101 - all four sorts and configured page size forwarded
+  ---
+  duration_ms: 0.519717
+  ...
+# Subtest: invalid media size rejected
+ok 102 - invalid media size rejected
+  ---
+  duration_ms: 0.163282
+  ...
+# Subtest: queue bound and concurrency
+ok 103 - queue bound and concurrency
+  ---
+  duration_ms: 0.26137
+  ...
+# Subtest: media route sets no-store and nosniff on denial
+ok 104 - media route sets no-store and nosniff on denial
+  ---
+  duration_ms: 0.263228
+  ...
+# Subtest: exact facility number accepted "0042"
+ok 105 - exact facility number accepted "0042"
+  ---
+  duration_ms: 1.203358
+  ...
+# Subtest: exact facility number accepted "0000"
+ok 106 - exact facility number accepted "0000"
+  ---
+  duration_ms: 0.209692
+  ...
+# Subtest: exact facility number accepted "9999"
+ok 107 - exact facility number accepted "9999"
+  ---
+  duration_ms: 0.097668
+  ...
+# Subtest: exact facility number accepted "1042"
+ok 108 - exact facility number accepted "1042"
+  ---
+  duration_ms: 0.092602
+  ...
+# Subtest: exact facility number accepted 1042
+ok 109 - exact facility number accepted 1042
+  ---
+  duration_ms: 0.118845
+  ...
+# Subtest: exact facility number accepted 9999
+ok 110 - exact facility number accepted 9999
+  ---
+  duration_ms: 0.085519
+  ...
+# Subtest: no normalization for 42
+ok 111 - no normalization for 42
+  ---
+  duration_ms: 1.328946
+  ...
+# Subtest: no normalization for 0
+ok 112 - no normalization for 0
+  ---
+  duration_ms: 0.114232
+  ...
+# Subtest: no normalization for "42"
+ok 113 - no normalization for "42"
+  ---
+  duration_ms: 0.156117
+  ...
+# Subtest: no normalization for "042"
+ok 114 - no normalization for "042"
+  ---
+  duration_ms: 0.163738
+  ...
+# Subtest: no normalization for "00042"
+ok 115 - no normalization for "00042"
+  ---
+  duration_ms: 0.102434
+  ...
+# Subtest: no normalization for "00420"
+ok 116 - no normalization for "00420"
+  ---
+  duration_ms: 0.084566
+  ...
+# Subtest: no normalization for " 0042"
+ok 117 - no normalization for " 0042"
+  ---
+  duration_ms: 0.083248
+  ...
+# Subtest: no normalization for "0042 "
+ok 118 - no normalization for "0042 "
+  ---
+  duration_ms: 0.131482
+  ...
+# Subtest: no normalization for "0042\\n"
+ok 119 - no normalization for "0042\\n"
+  ---
+  duration_ms: 0.140632
+  ...
+# Subtest: no normalization for "0042-01"
+ok 120 - no normalization for "0042-01"
+  ---
+  duration_ms: 0.1379
+  ...
+# Subtest: no normalization for "[0042]"
+ok 121 - no normalization for "[0042]"
+  ---
+  duration_ms: 0.094571
+  ...
+# Subtest: no normalization for "4.2"
+ok 122 - no normalization for "4.2"
+  ---
+  duration_ms: 0.176784
+  ...
+# Subtest: no normalization for "1e03"
+ok 123 - no normalization for "1e03"
+  ---
+  duration_ms: 0.128147
+  ...
+# Subtest: no normalization for "+042"
+ok 124 - no normalization for "+042"
+  ---
+  duration_ms: 0.137261
+  ...
+# Subtest: no normalization for "-042"
+ok 125 - no normalization for "-042"
+  ---
+  duration_ms: 0.085116
+  ...
+# Subtest: no normalization for "４２４２"
+ok 126 - no normalization for "４２４２"
+  ---
+  duration_ms: 0.100041
+  ...
+# Subtest: no normalization for null
+ok 127 - no normalization for null
+  ---
+  duration_ms: 0.075103
+  ...
+# Subtest: no normalization for undefined
+ok 128 - no normalization for undefined
+  ---
+  duration_ms: 0.090199
+  ...
+# Subtest: no normalization for true
+ok 129 - no normalization for true
+  ---
+  duration_ms: 0.066477
+  ...
+# Subtest: no normalization for {}
+ok 130 - no normalization for {}
+  ---
+  duration_ms: 0.063455
+  ...
+# Subtest: no normalization for ["0042"]
+ok 131 - no normalization for ["0042"]
+  ---
+  duration_ms: 0.060797
+  ...
+# Subtest: exact bracket token [0042]
+ok 132 - exact bracket token [0042]
+  ---
+  duration_ms: 0.370328
+  ...
+# Subtest: exact bracket token [0042] Anlage
+ok 133 - exact bracket token [0042] Anlage
+  ---
+  duration_ms: 0.109701
+  ...
+# Subtest: exact bracket token Anlage [0042]
+ok 134 - exact bracket token Anlage [0042]
+  ---
+  duration_ms: 0.068546
+  ...
+# Subtest: exact bracket token Ort [0042] Betrieb
+ok 135 - exact bracket token Ort [0042] Betrieb
+  ---
+  duration_ms: 0.060793
+  ...
+# Subtest: no partial bracket match [42]
+ok 136 - no partial bracket match [42]
+  ---
+  duration_ms: 0.181424
+  ...
+# Subtest: no partial bracket match [042]
+ok 137 - no partial bracket match [042]
+  ---
+  duration_ms: 0.142929
+  ...
+# Subtest: no partial bracket match [00042]
+ok 138 - no partial bracket match [00042]
+  ---
+  duration_ms: 0.081701
+  ...
+# Subtest: no partial bracket match [00420]
+ok 139 - no partial bracket match [00420]
+  ---
+  duration_ms: 0.071283
+  ...
+# Subtest: no partial bracket match [0042-01]
+ok 140 - no partial bracket match [0042-01]
+  ---
+  duration_ms: 0.07741
+  ...
+# Subtest: no partial bracket match 0042
+ok 141 - no partial bracket match 0042
+  ---
+  duration_ms: 0.075647
+  ...
+# Subtest: no partial bracket match [ 0042 ]
+ok 142 - no partial bracket match [ 0042 ]
+  ---
+  duration_ms: 0.069063
+  ...
+# Subtest: no partial bracket match [[0042]]
+ok 143 - no partial bracket match [[0042]]
+  ---
+  duration_ms: 0.067476
+  ...
+# Subtest: no partial bracket match facility:0042
+ok 144 - no partial bracket match facility:0042
+  ---
+  duration_ms: 0.066507
+  ...
+# Subtest: no partial bracket match [1042]
+ok 145 - no partial bracket match [1042]
+  ---
+  duration_ms: 0.846084
+  ...
+# Subtest: multiple tags fail closed
+ok 146 - multiple tags fail closed
+  ---
+  duration_ms: 0.167849
+  ...
+# Subtest: multiple number tokens fail closed [0042] und [0178]
+ok 147 - multiple number tokens fail closed [0042] und [0178]
+  ---
+  duration_ms: 0.121287
+  ...
+# Subtest: multiple number tokens fail closed [0042] und [0042]
+ok 148 - multiple number tokens fail closed [0042] und [0042]
+  ---
+  duration_ms: 0.081589
+  ...
+# Subtest: malformed tag response rejected
+ok 149 - malformed tag response rejected
+  ---
+  duration_ms: 0.096938
+  ...
+# Subtest: bracket extraction preserves zeroes
+ok 150 - bracket extraction preserves zeroes
+  ---
+  duration_ms: 0.660204
+  ...
+# Subtest: new view defaults to field and existing views retain manual mode
+ok 151 - new view defaults to field and existing views retain manual mode
+  ---
+  duration_ms: 0.160293
+  ...
+# Subtest: live image tag name must still match
+ok 152 - live image tag name must still match
+  ---
+  duration_ms: 0.142166
+  ...
+# Subtest: row 817 matches field 0042, not PK or browser-provided number/tag
+ok 153 - row 817 matches field 0042, not PK or browser-provided number/tag
+  ---
+  duration_ms: 0.741219
+  ...
+# Subtest: assignment debug metadata is restricted to administrators
+ok 154 - assignment debug metadata is restricted to administrators
+  ---
+  duration_ms: 0.275687
+  ...
+# Subtest: custom field selects only exact other number
+ok 155 - custom field selects only exact other number
+  ---
+  duration_ms: 0.329848
+  ...
+# Subtest: missing field and invalid number stop before any network call
+ok 156 - missing field and invalid number stop before any network call
+  ---
+  duration_ms: 0.326687
+  ...
+# Subtest: row authorization precedes Piwigo tag lookup
+ok 157 - row authorization precedes Piwigo tag lookup
+  ---
+  duration_ms: 1.31432
+  ...
+# Subtest: ambiguous or missing assignment blocks every image route
+ok 158 - ambiguous or missing assignment blocks every image route
+  ---
+  duration_ms: 0.916083
+  ...
+# Subtest: renaming between resolution and image check denies access
+ok 159 - renaming between resolution and image check denies access
+  ---
+  duration_ms: 0.343726
+  ...
+# Subtest: HTTP field lookup, media, field change and duplicate tag are fresh
+ok 160 - HTTP field lookup, media, field change and duplicate tag are fresh
+  ---
+  duration_ms: 119.27235
+  ...
+# Subtest: Piwigo i.php query-style derivative accepted, query unchanged
+ok 161 - Piwigo i.php query-style derivative accepted, query unchanged
+  ---
+  duration_ms: 1.338629
+  ...
+# Subtest: HTTPS upgrade disabled by default
+ok 162 - HTTPS upgrade disabled by default
+  ---
+  duration_ms: 1.676836
+  ...
+# Subtest: explicit same-host standard-port HTTPS upgrade preserves path/query
+ok 163 - explicit same-host standard-port HTTPS upgrade preserves path/query
+  ---
+  duration_ms: 0.306641
+  ...
+# Subtest: specific denial remains with HTTPS option: https://other.example.org/gallery/a.jpg
+ok 164 - specific denial remains with HTTPS option: https://other.example.org/gallery/a.jpg
+  ---
+  duration_ms: 0.172976
+  ...
+# Subtest: specific denial remains with HTTPS option: https://piwigo.example.org:8443/gallery/a.jpg
+ok 165 - specific denial remains with HTTPS option: https://piwigo.example.org:8443/gallery/a.jpg
+  ---
+  duration_ms: 0.1376
+  ...
+# Subtest: specific denial remains with HTTPS option: https://piwigo.example.org/outside/a.jpg
+ok 166 - specific denial remains with HTTPS option: https://piwigo.example.org/outside/a.jpg
+  ---
+  duration_ms: 0.109577
+  ...
+# Subtest: specific denial remains with HTTPS option: https://piwigo.example.org/gallery/a%2ejpg
+ok 167 - specific denial remains with HTTPS option: https://piwigo.example.org/gallery/a%2ejpg
+  ---
+  duration_ms: 0.187142
+  ...
+# Subtest: specific denial remains with HTTPS option: https://user:password@piwigo.example.org/gallery/a.jpg
+ok 168 - specific denial remains with HTTPS option: https://user:password@piwigo.example.org/gallery/a.jpg
+  ---
+  duration_ms: 0.142015
+  ...
+# Subtest: specific denial remains with HTTPS option: https://piwigo.example.org/gallery/a.jpg\#fragment
+ok 169 - specific denial remains with HTTPS option: https://piwigo.example.org/gallery/a.jpg\#fragment
+  ---
+  duration_ms: 0.234318
+  ...
+# Subtest: specific denial remains with HTTPS option: http://piwigo.example.org:8080/gallery/a.jpg
+ok 170 - specific denial remains with HTTPS option: http://piwigo.example.org:8080/gallery/a.jpg
+  ---
+  duration_ms: 0.205978
+  ...
+# Subtest: specific denial remains with HTTPS option: http://other.example.org/gallery/a.jpg
+ok 171 - specific denial remains with HTTPS option: http://other.example.org/gallery/a.jpg
+  ---
+  duration_ms: 0.132847
+  ...
+# Subtest: specific denial remains with HTTPS option: file:///gallery/a.jpg
+ok 172 - specific denial remains with HTTPS option: file:///gallery/a.jpg
+  ---
+  duration_ms: 0.110617
+  ...
+# Subtest: custom API ports are not silently rewritten
+ok 173 - custom API ports are not silently rewritten
+  ---
+  duration_ms: 0.252997
+  ...
+# Subtest: HTTP API base never causes HTTPS downgrade
+ok 174 - HTTP API base never causes HTTPS downgrade
+  ---
+  duration_ms: 0.205362
+  ...
+# Subtest: strict media rejection occurs before fetch and cannot leak key
+ok 175 - strict media rejection occurs before fetch and cannot leak key
+  ---
+  duration_ms: 0.687624
+  ...
+# Subtest: upgraded media request sends key only to original HTTPS origin
+ok 176 - upgraded media request sends key only to original HTTPS origin
+  ---
+  duration_ms: 22.862542
+  ...
+# Subtest: diagnostic does not fetch media and omits query, credentials and fragment
+ok 177 - diagnostic does not fetch media and omits query, credentials and fragment
+  ---
+  duration_ms: 0.67938
+  ...
+# Subtest: diagnostic redacts a key embedded in path, raw and URL-encoded
+ok 178 - diagnostic redacts a key embedded in path, raw and URL-encoded
+  ---
+  duration_ms: 0.382617
+  ...
+# Subtest: diagnostic indicates returned versus effective HTTPS origin
+ok 179 - diagnostic indicates returned versus effective HTTPS origin
+  ---
+  duration_ms: 0.266381
+  ...
+# Subtest: diagnostic distinguishes selected thumbnail and preview variants
+ok 180 - diagnostic distinguishes selected thumbnail and preview variants
+  ---
+  duration_ms: 0.308019
+  ...
+# Subtest: diagnostic safely reports missing or malformed media URLs
+ok 181 - diagnostic safely reports missing or malformed media URLs
+  ---
+  duration_ms: 0.338614
+  ...
+# Subtest: URL diagnostic is administrator only, before any client request
+ok 182 - URL diagnostic is administrator only, before any client request
+  ---
+  duration_ms: 0.40693
+  ...
+# Subtest: URL diagnostic still checks row and image membership
+ok 183 - URL diagnostic still checks row and image membership
+  ---
+  duration_ms: 0.649029
+  ...
+# Subtest: URL diagnostic returns running package version and checked image ID
+ok 184 - URL diagnostic returns running package version and checked image ID
+  ---
+  duration_ms: 0.912229
+  ...
+# Subtest: legacy defaults and intentionally empty captions
+ok 185 - legacy defaults and intentionally empty captions
+  ---
+  duration_ms: 1.615322
+  ...
+# Subtest: invalid display setting rejected: {"detail_size":"original"}
+ok 186 - invalid display setting rejected: {"detail_size":"original"}
+  ---
+  duration_ms: 0.276919
+  ...
+# Subtest: invalid display setting rejected: {"detail_max_width":2401}
+ok 187 - invalid display setting rejected: {"detail_max_width":2401}
+  ---
+  duration_ms: 0.194258
+  ...
+# Subtest: invalid display setting rejected: {"detail_max_height":86}
+ok 188 - invalid display setting rejected: {"detail_max_height":86}
+  ---
+  duration_ms: 0.113121
+  ...
+# Subtest: invalid display setting rejected: {"detail_max_width":"900px"}
+ok 189 - invalid display setting rejected: {"detail_max_width":"900px"}
+  ---
+  duration_ms: 0.104584
+  ...
+# Subtest: invalid display setting rejected: {"date_format":"script"}
+ok 190 - invalid display setting rejected: {"date_format":"script"}
+  ---
+  duration_ms: 0.089369
+  ...
+# Subtest: invalid display setting rejected: {"detail_caption":{}}
+ok 191 - invalid display setting rejected: {"detail_caption":{}}
+  ---
+  duration_ms: 0.092667
+  ...
+# Subtest: invalid display setting rejected: {"thumbnail_caption":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ok 192 - invalid display setting rejected: {"thumbnail_caption":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  ---
+  duration_ms: 0.101725
+  ...
+# Subtest: metadata whitelist excludes tags, location and URLs
+ok 193 - metadata whitelist excludes tags, location and URLs
+  ---
+  duration_ms: 0.743685
+  ...
+# Subtest: caption supports all whitelisted placeholders and both dates
+ok 194 - caption supports all whitelisted placeholders and both dates
+  ---
+  duration_ms: 0.481179
+  ...
+# Subtest: capture date stays empty, legacy date explicitly falls back to import date
+ok 195 - capture date stays empty, legacy date explicitly falls back to import date
+  ---
+  duration_ms: 0.209876
+  ...
+# Subtest: substitution is one pass, unknown placeholders are literal, no evaluation
+ok 196 - substitution is one pass, unknown placeholders are literal, no evaluation
+  ---
+  duration_ms: 0.13183
+  ...
+# Subtest: render escapes inline configuration and restricts footer to admins
+ok 197 - render escapes inline configuration and restricts footer to admins
+  ---
+  duration_ms: 1.849764
+  ...
+# Subtest: disabled navigation and bounded CSS values are emitted
+ok 198 - disabled navigation and bounded CSS values are emitted
+  ---
+  duration_ms: 0.268557
+  ...
+# Subtest: selected preview variant, descending fallback and unchanged thumb
+ok 199 - selected preview variant, descending fallback and unchanged thumb
+  ---
+  duration_ms: 1.336492
+  ...
+# Subtest: no fallback to originals or larger-than-selected derivatives
+ok 200 - no fallback to originals or larger-than-selected derivatives
+  ---
+  duration_ms: 0.668928
+  ...
+# Subtest: view configuration, not request body, determines preview quality
+ok 201 - view configuration, not request body, determines preview quality
+  ---
+  duration_ms: 0.724188
+  ...
+1..201
+# tests 201
+# suites 0
+# pass 201
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2214.98148

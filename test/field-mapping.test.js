@@ -37,12 +37,12 @@ test("live image tag name must still match", () => {
 
 const user = { user: { id: 2, role_id: 40 } };
 const cfg = { mapping_mode: "field", number_field: "facilitynr", page_size: 12 };
-function harness(client) {
+function harness(client, actor = user) {
   const row = { id: 817, facilitynr: "0042", othernumber: "0178" };
   const Table = { findOne: async () => ({ pk_name: "id",
     getFields: async () => [{ name: "facilitynr" }, { name: "othernumber" }],
     getRow: async (where, options) => {
-      assert.deepEqual(options, { forUser: user.user });
+      assert.deepEqual(options, { forUser: actor.user });
       return where.id === 817 ? row : null;
     }
   }) };
@@ -52,6 +52,13 @@ test("row 817 matches field 0042, not PK or browser-provided number/tag", async 
   const { svc } = harness({ tags: async () => [{ id: 123, name: "[0042] A" }],
     list: async (id) => { assert.equal(id, 123); return { images: [] }; } });
   const result = await svc.operations.list(1, cfg, { id: 817, number: "0178", facilitynr: "0178", tag_id: 999 }, user);
+  assert.equal(Object.hasOwn(result, "assignment"), false);
+});
+test("assignment debug metadata is restricted to administrators", async () => {
+  const admin = { user: { id: 1, role_id: 1 } };
+  const { svc } = harness({ tags: async () => [{ id: 123, name: "[0042] A" }],
+    list: async () => ({ images: [] }) }, admin);
+  const result = await svc.operations.list(1, cfg, { id: 817 }, admin);
   assert.deepEqual(result.assignment, { field: "facilitynr", number: "0042", tagId: 123, tagName: "[0042] A" });
 });
 test("custom field selects only exact other number", async () => {
@@ -96,7 +103,7 @@ test("HTTP field lookup, media, field change and duplicate tag are fresh", async
     const body = { id: 817, image_id: 1, size: "thumb" };
     const result = await svc.operations.list(1, cfg, body, user);
     assert.equal(result.images.length, 12);
-    assert.equal(result.assignment.number, "0042");
+    assert.equal(Object.hasOwn(result, "assignment"), false);
     assert.equal((await svc.operations.media(1, cfg, body, user)).type, "image/png");
     state.removed = true;
     await assert.rejects(svc.operations.media(1, cfg, body, user), e => e.status === 403);

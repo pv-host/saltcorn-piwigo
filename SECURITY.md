@@ -4,6 +4,9 @@ Das Plugin ist ein serverseitig vermittelter, lesender Zugang zu einer konfiguri
 
 ## Vertrauensgrenzen
 
+- **Anzeigevorlagen:** Ausschließlich Textsubstitution aus einer festen Metadatenliste; kein HTML, JavaScript oder Zugriff auf beliebige Datensatzfelder. Die Facility-Zuordnung einschließlich Schlagwortname/-ID wird nur Administratoren als Debug-Metadatum zurückgegeben.
+- **Einzelbildnavigation:** Auch Folgeseiten, Details und Medien durchlaufen dieselben serverseitigen Rechteprüfungen. Die gewünschte Bildvariante stammt aus der View-Konfiguration, nicht aus einem frei wählbaren Browserparameter; Originaldateien bleiben ausgeschlossen.
+
 - **Administratoren:** Können Ziel-URL, API-Key in der Modulkonfiguration und alternativ den Namen der Secret-Umgebungsvariable festlegen. Sie sind vertrauenswürdig; Konfiguration ist keine Sicherheitsgrenze gegen einen bösartigen Saltcorn-Administrator.
 - **Nummernfeld:** Im Feldmodus legt der gespeicherte Wert den Bildzugriff fest. Unberechtigte Änderungen über Bearbeitungsviews, API oder Importe müssen administrativ ausgeschlossen werden; das Plugin kann diese Schreibrechte nicht automatisch absichern.
 - **Browserparameter:** Können weder Nummernfeld noch Tag-ID überschreiben. Der Wert wird ausschließlich aus dem erneut berechtigungsgeprüften Saltcorn-Datensatz gelesen.

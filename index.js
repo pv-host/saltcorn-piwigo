@@ -5,6 +5,7 @@ const Table = require("@saltcorn/data/models/table");
 const { authenticated, integer, esc, errorResult, mappingMode } = require("./lib/core");
 const { makeService } = require("./lib/service");
 const { render } = require("./lib/ui");
+const { THUMB_CAPTION, DETAIL_CAPTION, PREVIEW_SIZES, displaySettings } = require("./lib/presentation");
 
 const configuration_workflow = () => new Workflow({
   steps: [{
@@ -57,6 +58,23 @@ function makeView(pluginCfg) {
               type: "String", fieldview: "textarea", default: "{}", showIf: { mapping_mode: "manual" },
               sublabel: 'JSON-Objekt, z.B. {"42": 123, "178": 456}. Links: Primärschlüssel der Facility, NICHT automatisch deren Facilitynummer. Rechts: numerische Piwigo-Tag-ID. Ein Tag je Datensatz; keine automatischen Änderungen.' },
             { name: "page_size", label: "Bilder pro Seite (1 bis 96)", type: "Integer", default: 48 },
+            { name: "thumbnail_caption", label: "Bildunterschrift: Vorschau", type: "String", fieldview: "textarea",
+              default: THUMB_CAPTION,
+              sublabel: "Text mit Platzhaltern: {name}, {file}, {date_creation}, {date_available}, {date}, {comment}, {width}, {height}, {dimensions}, {id}, {facility}. Zeilenumbrüche erlaubt. Leer = keine Unterschrift. Kein HTML." },
+            { name: "detail_caption", label: "Bildunterschrift: Einzelbild", type: "String", fieldview: "textarea",
+              default: DETAIL_CAPTION,
+              sublabel: "Dieselben Platzhalter wie oben. {date_creation} = Aufnahmedatum, {date_available} = Importdatum. {date} verwendet bei fehlendem Aufnahmedatum das Importdatum. Maximal 4096 Zeichen je Vorlage." },
+            { name: "date_format", label: "Datumsformat der Bildunterschriften", type: "String", default: "iso",
+              attributes: { options: [{ name: "iso", label: "Wie von Piwigo geliefert" },
+                { name: "de_date", label: "TT.MM.JJJJ" }, { name: "de_datetime", label: "TT.MM.JJJJ HH:mm" }] } },
+            { name: "detail_navigation", label: "Im Einzelbild vor- und zurückblättern", type: "Bool", default: true,
+              sublabel: "Auch über Seitengrenzen, in der gewählten Sortierung. Pfeiltasten links/rechts werden ebenfalls unterstützt." },
+            { name: "detail_size", label: "Piwigo-Bildvariante im Einzelbild", type: "String", default: "medium",
+              attributes: { options: PREVIEW_SIZES },
+              sublabel: "medium = Standard; large/xlarge/xxlarge für größere Bilder. Fehlt die Variante, wird eine kleinere verwendet. Keine Originaldateien; Größen hängen von Piwigo ab." },
+            { name: "detail_max_width", label: "Maximale Dialogbreite (320 bis 2400 px)", type: "Integer", default: 900 },
+            { name: "detail_max_height", label: "Maximale Bildhöhe (30 bis 85 % der Fensterhöhe)", type: "Integer", default: 60,
+              sublabel: "Das Bild bleibt vollständig sichtbar und wird nicht beschnitten. Kleine Bildschirme begrenzen die Breite automatisch." },
             { name: "min_role", label: "Maximale Rollen-ID (zusätzlich zu View- und Datensatzrechten)",
               type: "Integer", default: 80,
               sublabel: "Standardrollen: 1 = Administrator, 40 = Mitarbeiter, 80 = Benutzer. Öffentlicher Zugriff ist ausgeschlossen." }
@@ -81,7 +99,7 @@ function makeView(pluginCfg) {
         await table.getFields();
         const row = await table.getRow({ [table.pk_name]: id }, { forUser: user });
         if (!row) return '<div class="alert alert-warning">Datensatz nicht verfügbar oder kein Zugriff.</div>';
-        return render({ id, viewname, title: cfg.title || "Bilder", admin: user.role_id === 1 });
+        return render({ id, viewname, title: cfg.title || "Bilder", admin: user.role_id === 1, display: displaySettings(cfg) });
       } catch (e) {
         return `<div class="alert alert-warning">${esc(errorResult(e).error)}</div>`;
       }

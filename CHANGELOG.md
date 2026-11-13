@@ -1,5 +1,16 @@
 # Änderungen
 
+## 0.3.0
+
+Konfigurierbare Bildunterschriften und Einzelbilddarstellung sowie eine zurückhaltende Admin-Fußzeile. Verbindungsdaten, exakter vierstelliger Vergleich und rein lesender Zugriff bleiben erhalten.
+
+- **Fußzeile:** Zuordnung rechtsbündig neben der Seitennavigation, mobil darunter. Nur Administratoren; die Listenantwort normaler Benutzer enthält keine `assignment`-Daten mehr.
+- **Textvorlagen:** Separate Vorschau-/Einzelbildvorlagen, beide Datumsfelder, Dateiname, Titel, Beschreibung, Abmessungen, Bild-ID und Facility-Anzeigename. Leere Vorlagen blenden Unterschriften aus; sichere Textausgabe ohne HTML-Ausführung.
+- **Navigation:** Vorheriges/nächstes Bild und Pfeiltasten, auch über Seitengrenzen; konfigurierbar abschaltbar, sichere Grenzen und Wiederholungsmöglichkeit nach Abruffehlern.
+- **Bildgröße:** Konfigurierbare Piwigo-Variante, maximale Dialogbreite und Bildhöhe. Nur gleich große oder kleinere Ersatzvarianten; keine Originaldownloads.
+- **Kompatibilität:** Fehlende neue Einstellungen verwenden Standardwerte. Bei `medium` entfällt der bisherige Ersatz durch die größere Variante `large`; stattdessen werden kleinere Varianten gewählt.
+- **Prüfung:** 201 automatisierte Tests sowie lokale Saltcorn-1.6.2-Browserregression mit synthetischer Piwigo-API. Kein Produktionstest.
+
 ## 0.2.2
 
 Präzisere Diagnose abgelehnter Piwigo-Bildadressen und eine optionale HTTPS-Korrektur für Reverse-Proxy-Situationen. Die vom Nutzer beschriebene HTTPS-Adresse mit `i.php?...` wird bereits von der bisherigen URL-Prüfung akzeptiert; die tatsächlich abweichende API-Adresse der Zielinstallation ist noch zu ermitteln.

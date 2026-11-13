@@ -1,5 +1,15 @@
 # Bedienabläufe und Abnahme 0.2.0
 
+## Erweiterung 0.3.0: Anzeige und Einzelbildnavigation
+- Administrator: Zuordnung rechtsbündig neben der Seitennavigation, mobil darunter. Normale Benutzer erhalten weder Element noch Zuordnungsdaten.
+- Separate Vorlagen für Vorschau und Einzelbild speichern, wieder öffnen und mit Aufnahmedatum, Dateiname, Beschreibung und Abmessungen prüfen. Leere Vorlage blendet die Unterschrift aus; HTML bleibt Text.
+- Datum ohne Zeitzonenverschiebung; fehlendes Aufnahmedatum bleibt bei {date_creation} leer.
+- Einzelbild: vor/zurück per Schaltfläche und Pfeiltaste, einschließlich Seitengrenze in beiden Richtungen; erster/letzter Treffer ohne Umlauf.
+- Navigation abschaltbar. Escape, Schließen und erneutes Öffnen brechen alte Abrufe ab.
+- Variante, Dialogbreite und maximale Bildhöhe konfigurieren; mobile Begrenzung und kleinere Ersatzvariante prüfen.
+- Fehlerfälle: fehlendes Bild, ausfallender Seitenabruf, geänderte Treffermenge und verweigerter Zugriff; Diagnose und Schließen bleiben bedienbar.
+- Bestehende Hauptabläufe unten wiederholen; Screenshots bei 1280 und 375 px prüfen.
+
 ## Erweiterung 0.2.2: Abgelehnte Bildadressen
 - Piwigo-Adresse der Form `/i.php?/piwigo-galleries/...-xl.jpg` bleibt bei passender Herkunft erlaubt.
 - Neue HTTPS-Korrektur standardmäßig aus; nur gleicher Host und Standardports werden optional von HTTP auf HTTPS umgesetzt.

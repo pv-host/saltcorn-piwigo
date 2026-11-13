@@ -1,4 +1,4 @@
-# Prüfbericht: saltcorn-piwigo 0.2.2
+# Prüfbericht: saltcorn-piwigo 0.3.0
 
 Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Plugin-Paket; es wurde weder im Produktiv-Saltcorn installiert noch mit der produktiven Piwigo-Instanz verbunden.
 
@@ -6,15 +6,40 @@ Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Pl
 
 Die erweiterte lesende Version wurde unter Node.js 20.20.2 mit einer echten lokalen Saltcorn-1.6.2-Installation auf SQLite erprobt. Piwigo wurde durch einen synthetischen HTTP-Nachbau des benötigten 16.5.0-API-Vertrags ersetzt.
 
-Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Hinzu kommen exakte Feld-/Klammervergleiche, Bestandskompatibilität, Modul-Key, präzise URL-Diagnose und sichere HTTPS-Korrektur; der aktuelle Testlauf steht in `development/evidence/unit-tests-0.2.2.tap`.
+Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Hinzu kommen exakte Feld-/Klammervergleiche, Bestandskompatibilität, Modul-Key, URL-Diagnose, sichere HTTPS-Korrektur sowie die neuen Anzeigevorlagen und Größenoptionen; der aktuelle Testlauf steht in `development/evidence/unit-tests-0.3.0.tap`.
+
+## Abnahme der neuen Anzeigeoptionen
+
+Die neue Version wurde in der bestehenden lokalen Saltcorn-Installation geladen, ohne deren Verbindungsdaten zu ersetzen. Die folgenden Prüfungen betreffen 0.3.0; die danach aufgeführten Basisprüfungen und älteren Bildnachweise dokumentieren zusätzlich die Entwicklung der Vorgängerversionen.
+
+| Bereich | Prüfergebnis |
+|---|---|
+| Admin-Fußzeile | Bei 1280 px neben der Navigation und rechtsbündig, bei 375 px darunter; keine horizontale Überbreite |
+| Normale Benutzer | Kein Zuordnungselement, keine `assignment`-Daten in der Listenantwort, kein Diagnosebutton |
+| Konfiguration | Separate Vorlagen, Datumsformat, Variante, Breite und Höhe im echten Saltcorn-Formular gespeichert und erneut geöffnet |
+| Vorlagen | Dateiname, Titel, Aufnahme-/Importdatum, Beschreibung und Abmessungen angezeigt; Beschreibung mit HTML als Klartext |
+| Leere Vorlagen | Beide Unterschriften nach Speichern leerer Felder ausgeblendet |
+| Abschaltbare Navigation | Buttonleiste ausgeblendet; Pfeiltaste verändert das Bild nicht |
+| Seitengrenzen | Bild 12 → 13 sowie 13 → 12 per Button/Pfeiltaste; Sortierwert `filename` bleibt beim Folgeseitenabruf erhalten |
+| Anfang/Ende | Erster Treffer ohne Zurück; letzter Treffer ohne Weiter, kein Umlauf |
+| Fehlerfälle | Synthetischer Seitenausfall wiederholbar; gesperrte Vorschau mit bedienbarer Diagnose/Navigation; verschwundene Folgeseite mit Aktualisierungshinweis |
+| Tastatur | Fokus bleibt beim Navigieren im Dialog; Escape schließt; erneutes Öffnen funktioniert |
+| Bildgröße | 1200 px Dialogbreite und 75 % maximale Bildhöhe geprüft; mobil begrenzt. Nicht vorhandenes `xlarge` fällt auf vorhandenes `medium` zurück |
+| Zugriffsschutz | Fremder Datensatz und Admin-Diagnose als normaler Benutzer: HTTP 403. Ohne CSRF-Token: HTTP 302 auf Startseite, keine Bilderantwort |
+| Regression | Galerie-Pagination, Kacheln/Liste, Aktualisierung, Sortierung, Verbindungstest, Tag-Suche, Legacy-View sowie fehlende/ungültige Zuordnung erneut bedient |
+| Browser | Chromium bei 1280 × 900 und 375 × 812; keine JavaScript-Pageerrors in den geprüften Abläufen |
+
+`development/browser-regression.js` enthält die wiederholbare Navigationsregression für eine bereits angemeldete Playwright-Seite der lokalen Fixture. Für Anfang/Ende werden Browserantworten auf 14 synthetische Treffer begrenzt; Fehlerfälle werden ebenfalls nur lokal simuliert.
+
+Die neuen Screenshots heißen `v030-desktop-footer.png`, `v030-desktop-detail.png`, `v030-mobile-footer.png` und `v030-mobile-detail.png`. Bei großen gewählten Bildern oder langen Unterschriften ist internes Scrollen im Dialog beabsichtigt; die Bedienleiste bleibt sichtbar.
 
 ## Ausgeführte Prüfungen
 
 | Bereich | Ergebnis und genaue Reichweite |
 |---|---|
 | JavaScript-Syntax | `node --check` für Einstiegspunkt, Bibliotheken und Testskripte erfolgreich |
-| Automatische Tests | 183 Tests erfolgreich, keine übersprungenen Tests |
-| Saltcorn-Installation | Bestehenden lokalen Testeintrag gezielt mit `Plugin.requirePlugin(plugin, true)` aktualisiert; Version 0.2.2 geprüft, vorhandene Plugin-Konfiguration erhalten |
+| Automatische Tests | 201 Tests erfolgreich, keine übersprungenen Tests |
+| Saltcorn-Installation | Bestehenden lokalen Testeintrag gezielt mit `Plugin.requirePlugin(plugin, true)` aktualisiert; Version 0.3.0 geprüft, vorhandene Plugin-Konfiguration erhalten |
 | i.php-Adresse | HTTPS-Adresse mit Bildpfad in der Query bei passender API-Herkunft akzeptiert; Query bleibt unverändert |
 | Differenzierte URL-Prüfung | Protokoll, Host, Port, Installationspfad, Prozentkodierung, Zugangsdaten und Fragment geprüft |
 | Optionale HTTPS-Korrektur | Automatisierter Request-Test bestätigt HTTPS-Ziel und unveränderten API-Key-Header; fremde Hosts, Sonderports und gesperrte Pfade bleiben abgelehnt; Standard aus |
@@ -45,7 +70,7 @@ Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Ta
 | Tag-ID-Suche | Teilzeichenfolgensuche liefert erwartete ID; Ausgabe nur für Administratoren |
 | Fehlende Zuordnung | Expliziter Hinweis, keine unbeschränkte Bildabfrage |
 | Entfernte Zuordnung | Automatische Tests verweigern Details und Bilddaten nach Entfernung der Facility-Tag-Mitgliedschaft |
-| Desktop | Browserprüfung mit 1360 × 960 Pixeln |
+| Desktop | Aktuelle Browserprüfung mit 1280 × 900 Pixeln |
 | Mobil | Browserprüfung mit 375 × 812 Pixeln; Dokumentbreite 375 Pixel, keine horizontale Überbreite; Detaildialog passt in den Bildschirm |
 | Browserfehler | Keine JavaScript-Pageerrors während der dokumentierten Bedienabläufe |
 

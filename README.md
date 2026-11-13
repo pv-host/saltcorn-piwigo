@@ -1,4 +1,4 @@
-# saltcorn-piwigo 0.2.2
+# saltcorn-piwigo 0.3.0
 
 Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltcorn 1.6.2 und Piwigo 16.5.0**; die lokale Saltcorn-Ausführung wurde mit einem synthetischen Piwigo-API-Nachbau geprüft, nicht mit der produktiven Piwigo-Instanz.
 
@@ -6,7 +6,9 @@ Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltco
 
 - **Eine Piwigo-Instanz:** Konfigurierbare Basis-URL, API-Key direkt im maskierten Modul-Konfigurationsfeld und Timeout; Umgebungsvariable weiterhin als Alternative.
 - **Facility-Galerie:** Kacheln oder Liste, Seitenwechsel, vier Sortierungen und manuelle Aktualisierung.
-- **Bilddetails:** Größere Vorschau, Dateiname, Datum und Beschreibung als sicherer Text.
+- **Bildunterschriften:** Separate Textvorlagen für Vorschau und Einzelbild, beispielsweise Aufnahmedatum, Dateiname, Beschreibung und Abmessungen.
+- **Bilddetails:** Konfigurierbare Bildvariante, Dialogbreite und maximale Bildhöhe; Vor-/Zurück-Blättern per Button oder Pfeiltaste, auch über Ergebnisseiten hinweg.
+- **Admin-Fußzeile:** Feldnummer, Schlagwort und Tag-ID rechtsbündig neben der Seitennavigation. Auf schmalen Bildschirmen darunter; für normale Benutzer weder im HTML noch in der Listenantwort enthalten.
 - **Exakte Feldzuordnung:** Wählbares Saltcorn-Feld, z. B. `facilitynr="0042"`, wird 1:1 mit `[0042]` im Namen eines Piwigo-Schlagworts verglichen. Kein Auffüllen oder unscharfer Vergleich.
 - **Bestandsschutz:** Bereits vorhandene 0.1.0-Views behalten ihre manuelle Datensatz-ID/Tag-ID-Zuordnung, bis der Administrator ausdrücklich auf Feldzuordnung umstellt.
 - **Administration:** Verbindung prüfen und vorhandene Tag-IDs suchen, ausschließlich für Saltcorn-Administratoren.
@@ -25,7 +27,7 @@ Das ZIP enthält den vollständigen Ordner `saltcorn-piwigo` einschließlich Tes
 Beispiel unter Linux, auszuführen mit dem Benutzer und der Umgebung der Saltcorn-Installation:
 
 ```sh
-unzip saltcorn-piwigo-0.2.2.zip -d /opt/saltcorn-plugins
+unzip saltcorn-piwigo-0.3.0.zip -d /opt/saltcorn-plugins
 saltcorn install-plugin -d /opt/saltcorn-plugins/saltcorn-piwigo
 ```
 
@@ -37,7 +39,64 @@ Es gibt keine eigenen Laufzeit-Fremdabhängigkeiten. Die Saltcorn-Module stammen
 
 Vorher Datenbank, Plugin-Konfiguration und View-Konfigurationen sichern. Den vorhandenen lokalen Plugin-Quellordner durch den Inhalt des neuen `saltcorn-piwigo`-Ordners ersetzen; Source und Location des bestehenden Plugin-Eintrags müssen auf diesen Ordner zeigen, nicht auf das ZIP oder dessen Elternverzeichnis.
 
-Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.2.2` sowie in den Bilddetails den Administrator-Button „Bildadresse prüfen“ kontrollieren.
+Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.3.0` sowie in den Bilddetails den Administrator-Button „Bildadresse prüfen“ kontrollieren.
+
+## Neue Anzeigeoptionen ab 0.3.0
+
+Die Einstellungen liegen in **Views → gewünschte Piwigo-View → Configure**, nicht in der Modul-Verbindungskonfiguration. Bestehende Views funktionieren auch ohne erneutes Speichern mit Standardwerten.
+
+### Bildunterschriften
+
+„Bildunterschrift: Vorschau“ und „Bildunterschrift: Einzelbild“ sind unabhängig voneinander. Jede Vorlage erlaubt Text und Zeilenumbrüche, höchstens 4096 Zeichen; eine leere Vorlage blendet die betreffende Unterschrift aus.
+
+Beispiel für Vorschauen:
+
+```text
+{file}
+Aufnahme: {date_creation}
+```
+
+Beispiel für Einzelbilder:
+
+```text
+{name}
+{file}
+Aufnahme: {date_creation}
+Import: {date_available}
+{dimensions} px
+{comment}
+```
+
+| Platzhalter | Inhalt |
+|---|---|
+| `{name}` | Bildtitel, ersatzweise Dateiname |
+| `{file}` | Dateiname |
+| `{date_creation}` | Aufnahmedatum aus Piwigo; bleibt leer, wenn nicht vorhanden |
+| `{date_available}` | Importdatum aus Piwigo |
+| `{date}` | Kompatibilitätswert: Aufnahmedatum, ersatzweise Importdatum |
+| `{comment}` | Beschreibung als Text; enthaltenes HTML wird nicht ausgeführt |
+| `{width}`, `{height}`, `{dimensions}` | Abmessungen laut Piwigo-Metadaten, nicht die ausgewählte Vorschaugröße |
+| `{id}` | Piwigo-Bild-ID |
+| `{facility}` | Anzeigename aus dem in der View gewählten `label_field` |
+
+Fehlende Werte werden leer ausgegeben; selbst geschriebene Beschriftungen wie „Aufnahme:“ bleiben stehen. Unbekannte Platzhalter bleiben als Text sichtbar. Andere Metadaten, Tags, GPS, EXIF oder Original-URLs sind nicht freigegeben; HTML, JavaScript und berechnete Ausdrücke werden nicht unterstützt.
+
+„Datumsformat der Bildunterschriften“ bietet den unveränderten Piwigo-Wert, `TT.MM.JJJJ` oder `TT.MM.JJJJ HH:mm`. Es findet keine Zeitzonenverschiebung statt und kein zusätzlicher EXIF-Abruf; das Aufnahmedatum muss in Piwigo gepflegt sein.
+
+### Einzelbilder blättern und vergrößern
+
+- **Navigation:** Standardmäßig aktiv, mit „Im Einzelbild vor- und zurückblättern“ abschaltbar. Buttons und Pfeiltasten folgen der gewählten Galeriesortierung; erster und letzter Treffer haben keinen Umlauf.
+- **Seitengrenzen:** Benötigte Folgeseiten werden erst beim Blättern abgefragt. Die zugrunde liegende Galerie behält ihre Seite; nach Schließen bleibt man dort, wo der Dialog geöffnet wurde.
+- **Bildbestand:** Keine feste Momentaufnahme. Ändern sich Zuordnungen oder Bilder während des Blätterns, können Positionen wechseln; bei verschwundener Folgeseite die Galerie aktualisieren. Jede neue Anfrage durchläuft weiterhin die Rechteprüfung.
+- **Piwigo-Bildvariante:** `thumb`, `xsmall`, `small`, `medium` (Standard), `large`, `xlarge` oder `xxlarge`. Fehlt die gewählte Variante, wird die nächstkleinere verfügbare Variante verwendet. Keine Originaldateien und kein Ausweichen auf größere Varianten.
+- **Dialogbreite:** 320 bis 2400 Pixel, Standard 900. Kleine Bildschirme begrenzen die Breite automatisch.
+- **Bildhöhe:** Maximal 30 bis 85 Prozent der Fensterhöhe, Standard 60. Bilder werden nicht beschnitten; bei großem Bild oder langer Unterschrift lässt sich der Dialog innen scrollen, die Bedienleiste bleibt oben.
+
+Für eine größere Ansicht beispielsweise `xlarge`, 1200 Pixel Breite und 75 Prozent Bildhöhe wählen. Die tatsächlichen Auflösungen und verfügbaren Varianten stammen aus Piwigo; kleinere Ersatzbilder können beim Vergrößern unscharf wirken und das unveränderte 12-MiB-Limit gilt je Bildabruf.
+
+### Admin-Fußzeile
+
+Die Zuordnungszeile, beispielsweise `facilitynr = 0313 · Schlagwort: [0313] BGA Dorn (Tag-ID 139)`, steht ausschließlich für Saltcorn-Administratoren (Rollen-ID 1) rechts neben der Seitennavigation. Diese Angaben werden dynamisch aus der aufgelösten Zuordnung erzeugt und nicht fest eingetragen; im manuellen Altmodus gibt es keine Feldnummer-Zeile.
 
 Im lokalen Test wurde der bestehende Plugin-Datensatz beibehalten und mit der Saltcorn-Modellfunktion `Plugin.requirePlugin(plugin, true)` neu geladen; die zurückgegebene Version wurde am bestehenden Datensatz gespeichert. Das ist kein unmittelbar im Browser ausführbarer Befehl und setzt den richtigen Saltcorn-Node-/Datenbankkontext voraus; `test/setup-field-saltcorn.js` demonstriert es ausschließlich für die isolierte Testdatenbank und darf nicht produktiv ausgeführt werden.
 
@@ -194,7 +253,7 @@ Eine Piwigo-Adresse der Form `https://piwigo.example.org/i.php?/piwigo-galleries
 
 Als Administrator eine betroffene Bildkarte öffnen und in den Bilddetails **„Bildadresse prüfen“** anklicken, auch wenn die Vorschau selbst fehlschlägt. Die Diagnose führt keinen Bildabruf aus; `allowed: true` bestätigt nur die URL-Prüfung, nicht Erreichbarkeit oder Bildinhalt.
 
-- **`plugin_version`:** Tatsächlich geladene Plugin-Version; erwartet wird `0.2.2`.
+- **`plugin_version`:** Tatsächlich geladene Plugin-Version; erwartet wird `0.3.0`.
 - **`api_base`:** Tatsächlich geladene Basis-Konfiguration, nicht nur ein eventuell noch nicht übernommener Formularwert.
 - **`returned`:** Herkunft und Pfad der jeweils ausgewählten API-Vorschau; `thumb` und `preview` werden getrennt geprüft.
 - **`reason`:** Konkreter Ablehnungsgrund bei Protokoll, Hostname, Port, Installationspfad oder Prozentkodierung.
