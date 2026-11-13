@@ -1,24 +1,30 @@
-# Prüfbericht: saltcorn-piwigo 0.1.0
+# Prüfbericht: saltcorn-piwigo 0.2.0
 
-Prüfdatum: 11. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Plugin-Paket; es wurde weder im Produktiv-Saltcorn installiert noch mit der produktiven Piwigo-Instanz verbunden.
+Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Plugin-Paket; es wurde weder im Produktiv-Saltcorn installiert noch mit der produktiven Piwigo-Instanz verbunden.
 
 ## Ergebnis
 
-Die erste lesende Version wurde unter Node.js 20.20.2 mit einer echten lokalen Saltcorn-1.6.2-Installation auf SQLite erprobt. Piwigo wurde durch einen synthetischen HTTP-Nachbau des benötigten 16.5.0-API-Vertrags ersetzt.
+Die erweiterte lesende Version wurde unter Node.js 20.20.2 mit einer echten lokalen Saltcorn-1.6.2-Installation auf SQLite erprobt. Piwigo wurde durch einen synthetischen HTTP-Nachbau des benötigten 16.5.0-API-Vertrags ersetzt.
 
-Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Der vollständige Testlauf steht in `development/evidence/unit-tests.tap`.
+Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Hinzu kommen exakte Feld-/Klammervergleiche, Mehrdeutigkeiten, Bestandskompatibilität und Änderungen während der Nutzung; der aktuelle Testlauf steht in `development/evidence/unit-tests-0.2.0.tap`.
 
 ## Ausgeführte Prüfungen
 
 | Bereich | Ergebnis und genaue Reichweite |
 |---|---|
 | JavaScript-Syntax | `node --check` für Einstiegspunkt, Bibliotheken und Testskripte erfolgreich |
-| Automatische Tests | 83 Tests erfolgreich, keine übersprungenen Tests |
-| Saltcorn-Installation | Lokales Paket über `saltcorn install-plugin -d …` in Saltcorn 1.6.2 registriert |
-| Konfigurationsformulare | Plugin- und View-Workflow mit echten Saltcorn-Modellen erzeugt; View-Formular im Browser geöffnet, JSON-Feld als Textarea bestätigt |
+| Automatische Tests | 138 Tests erfolgreich, keine übersprungenen Tests |
+| Saltcorn-Installation | Bestehenden lokalen Testeintrag gezielt mit `Plugin.requirePlugin(plugin, true)` aktualisiert; Version 0.2.0 und Workflow-Export geprüft, Plugin-Konfiguration erhalten |
+| Konfigurationsformulare | Plugin- und View-Workflow erzeugt, im Browser gespeichert; Moduswechsel blendet JSON-Feld beziehungsweise Feldwahl passend ein |
+| Exakter Vergleich | Datensatz 817 mit String `0042` findet ausschließlich Tag 123 mit `[0042] Testanlage`; Primärschlüssel und Browserparameter ersetzen den Feldwert nicht |
+| Keine Normalisierung | `42`, Leerzeichen einschließlich Zeilenumbruch, falsche Länge, Nicht-ASCII-Ziffern und geklammerter Saltcorn-Feldwert abgelehnt |
+| Teilstrings | `[42]`, `[00420]`, `[00042]`, `[0042-01]` und `[[0042]]` ergeben keinen Treffer |
+| Mehrdeutigkeit | Zwei Tags mit derselben Nummer oder mehrere gültige Klammernummern in einem passenden Tag blockieren Listen-, Detail- und Medienzugriff |
+| Änderungen | Änderung des Feldwerts, Umbenennung eines Tags zwischen Auflösung und Bildprüfung und Entfernen der Bildmitgliedschaft geprüft; kein dauerhafter Zuordnungscache |
+| Bestandsmodus | Bestehende JSON-Galerie und deren Leermeldung erneut im Browser geprüft; alte Formulare behalten den manuellen Standard |
 | Besitzerrechte | Reale Saltcorn-Tabelle mit Besitzerfeld: eigener Datensatz erlaubt, fremder Datensatz verweigert, Administratorzugriff erlaubt |
 | Anonyme Zugriffe | Kein Galeriezugriff; Saltcorn-Routen verweigern beziehungsweise leiten um |
-| CSRF | Anfrage ohne Token von Saltcorn abgefangen; Server protokolliert `invalid csrf token` |
+| CSRF | Anfrage ohne Token mit HTTP 302 auf `/` abgefangen; Server protokolliert `invalid csrf token`. Ein Client mit automatischer Weiterleitung sieht anschließend HTTP 200 der Startseite, nicht eine erfolgreiche Bilderantwort |
 | Direkte Routenzugriffe | Fremder Datensatz und administrative Tag-Suche als Nichtadministrator mit HTTP 403 abgelehnt |
 | Galerie | Erste Seite und zwölf Vorschaubilder im Browser erfolgreich geladen |
 | Pagination | Seite 2 liefert andere Bild-IDs; Zurück funktioniert; API-Test berücksichtigt serverseitig auf 20 reduzierte Seitengröße |
@@ -36,6 +42,10 @@ Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Ta
 
 Die Screenshots in `development/evidence/` zeigen die Galerie in der echten lokalen Saltcorn-Oberfläche mit ausdrücklich synthetischen Testbildern. Sie dokumentieren keine echten Anlagenbilder und keine Verbindung zu einer produktiven Piwigo-Installation.
 
+Die neuen Nachweise heißen `field-desktop-0.2.0.png` und `field-mobile-0.2.0.png`; ältere Screenshots dokumentieren den Bestandsmodus. Die Browserprüfungen folgten `development/FLOWS.md`, einschließlich Feldkonfiguration, Galerie, Diagnose, Suche, Fehlern, Mobilansicht und Besitzerrechten.
+
+Für den Feldtest wurde ausschließlich die neue synthetische Tabelle `facility_field_qa` angelegt, Zeilenzahl 0 auf 4. Die vorhandene Fixture-Tabelle `facility_qa` wurde nicht geändert; `test/setup-field-saltcorn.js` verweigert das Überschreiben bereits bestehender Feld-Fixtures.
+
 ## API-Prüfung
 
 Die benötigten Methodennamen und Parameter wurden im Piwigo-16.5.0-Quellstand nachgesehen, einschließlich Tag-Seitenabfrage, Bildinformationen und Sitzungsstatus ([Piwigo 16.5.0 API-Deklarationen](https://raw.githubusercontent.com/Piwigo/Piwigo/16.5.0/ws.php), [Sitzungsfunktionen](https://raw.githubusercontent.com/Piwigo/Piwigo/16.5.0/include/ws_functions/pwg.php)).
@@ -47,7 +57,9 @@ Die geprüfte Standardkonfiguration begrenzt API-Bildseiten auf maximal 500 Bild
 ## Noch nicht nachgewiesen
 
 - **Reales Piwigo:** Login per echtem API-Key, reale Bildauslieferung und konkrete Album-/Privatsphärenregeln der Zielinstallation.
+- **Gemeldete Installationsfehler:** Die lokale Registrierung und beide Konfigurationsworkflows funktionieren; damit ist die Ursache der früher gemeldeten Ladefehler auf dem Zielserver nicht nachgewiesen oder behoben.
 - **Produktivdatenmenge:** Laufzeit, CPU-/Speicherlast und Parallelbetrieb mit tatsächlich 120.000 Bilddateien; die Fixture simuliert die API-Trefferzahl.
+- **Zusätzliche Schlagwortlast:** Im Feldmodus wird die sichtbare Tag-Liste je Abruf neu gelesen. Last und Latenz mit echten Tags und parallelen Nutzern sind noch zu messen.
 - **PostgreSQL:** Die lokale Saltcorn-Integration lief auf SQLite, nicht auf PostgreSQL. Das Plugin verwendet die Saltcorn-Modelle und enthält keine eigenen Datenbankabfragen.
 - **Besondere Infrastruktur:** Reverse Proxy, Medien-CDN, zusätzliche Piwigo-Bildschutz-Plugins und abweichende Authentifizierung.
 - **Andere Plattformen:** Kein separater Lauf unter Node.js 18, anderen Saltcorn-Versionen oder mobilen Betriebssystem-Browsern.

@@ -7,7 +7,8 @@ const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQ
 
 function createMock() {
   const calls = [];
-  const state = { removed: false, outage: false, total: 120000, cap: 48, auth: true };
+  const state = { removed: false, outage: false, total: 120000, cap: 48, auth: true,
+    tags: [{ id: 123, name: "[0042] Testanlage" }, { id: 456, name: "Anlage [0178]" }] };
   const server = http.createServer(async (req, res) => {
     if (state.outage) { res.writeHead(503); res.end("offline"); return; }
     if (req.headers["x-piwigo-api"] !== "fixture-only-not-a-real-key") {
@@ -31,7 +32,7 @@ function createMock() {
       file: `IMG_${String(id).padStart(6, "0")}.jpg`, date_creation: "2026-11-10 10:15:00",
       date_available: "2026-11-11 09:00:00",
       comment: "<b>Beschreibung als Text, nicht als HTML</b>", width: 640, height: 420,
-      tags: [{ id: state.removed ? 999 : 123, name: "facility:0042" }, { id: 456, name: "private other facility" }],
+      tags: [{ id: state.removed ? 999 : 123, name: state.tags[0].name }, { id: 456, name: "private other facility" }],
       derivatives: { thumb: { url: origin + "preview.png" }, medium: { url: origin + "preview.png" } },
       element_url: origin + "original.jpg"
     });
@@ -41,7 +42,7 @@ function createMock() {
       case "pwg.session.getStatus":
         result = { version: "16.5.0", username: state.auth ? "saltcorn-readonly" : "guest", status: state.auth ? "normal" : "guest" }; break;
       case "pwg.tags.getList":
-        result = { tags: [{ id: 123, name: "facility:0042" }, { id: 456, name: "facility:0178" }] }; break;
+        result = { tags: state.tags }; break;
       case "pwg.tags.getImages": {
         const page = Number(p.get("page")), perPage = Math.min(Number(p.get("per_page")), state.cap);
         const total = Number(p.get("tag_id")) === 123 ? state.total : 0;

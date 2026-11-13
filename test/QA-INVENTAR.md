@@ -4,6 +4,9 @@ Die Abnahme trennt automatische Vertragstests, echte Saltcorn-Ausführung und Pi
 
 ## Zu prüfende Bedienabläufe
 
+- **Feldzuordnung:** Wählbares Feld; `0042` exakt gegen `[0042]`, keine Nullenergänzung, keine Leerzeichenbereinigung, kein Teilstringvergleich.
+- **Eindeutigkeit:** Fehlende Treffer, mehrere passende Tags oder mehrere Klammernummern im passenden Tag sperren den Zugriff.
+- **Migration:** Bestehende JSON-Views unverändert; ausdrücklicher Moduswechsel, kein Fallback von Feldmodus auf JSON.
 - **Installation:** Lokales Plugin in Saltcorn 1.6.2 registrieren; Plugin- und View-Konfiguration rendern.
 - **Galerie:** Authentifiziert eine berechtigte Facility öffnen, erste Seite und Vorschaubilder prüfen.
 - **Navigation:** Weiter und zurück; Seitenanzeige und andere Bild-IDs kontrollieren.

@@ -1,4 +1,4 @@
-# saltcorn-piwigo 0.1.0
+# saltcorn-piwigo 0.2.0
 
 Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltcorn 1.6.2 und Piwigo 16.5.0**; die lokale Saltcorn-Ausführung wurde mit einem synthetischen Piwigo-API-Nachbau geprüft, nicht mit der produktiven Piwigo-Instanz.
 
@@ -7,12 +7,13 @@ Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltco
 - **Eine Piwigo-Instanz:** Konfigurierbare Basis-URL, serverseitiger API-Key und Timeout.
 - **Facility-Galerie:** Kacheln oder Liste, Seitenwechsel, vier Sortierungen und manuelle Aktualisierung.
 - **Bilddetails:** Größere Vorschau, Dateiname, Datum und Beschreibung als sicherer Text.
-- **Stabile Zuordnung:** Ein Piwigo-Tag je Facility-Datensatz; Zuordnung über numerische IDs in der administrativen View-Konfiguration.
+- **Exakte Feldzuordnung:** Wählbares Saltcorn-Feld, z. B. `facilitynr="0042"`, wird 1:1 mit `[0042]` im Namen eines Piwigo-Schlagworts verglichen. Kein Auffüllen oder unscharfer Vergleich.
+- **Bestandsschutz:** Bereits vorhandene 0.1.0-Views behalten ihre manuelle Datensatz-ID/Tag-ID-Zuordnung, bis der Administrator ausdrücklich auf Feldzuordnung umstellt.
 - **Administration:** Verbindung prüfen und vorhandene Tag-IDs suchen, ausschließlich für Saltcorn-Administratoren.
 - **Datensatzrechte:** Für jeden Listen-, Detail- und Bildabruf erneute Prüfung über Saltcorn `getRow(..., {forUser})`; für Bilddaten zusätzlich aktuelle Tag-Mitgliedschaft über Piwigo.
 - **Kein Vollimport:** Nur die angeforderte Ergebnisseite wird gelesen. Vorschauen werden bei Bedarf geladen.
 
-Keine Uploads, Bild-/Tag-Änderungen, Löschungen, Originaldownloads, öffentlichen Links, automatische Tabellenanlage oder Hintergrundsynchronisation. Mehrere Facility-Tags an einem Bild bleiben möglich; mehrere Alias-Tags je Facility und eine eigene Zuordnungstabelle sind in 0.1.0 noch nicht enthalten.
+Keine Uploads, Bild-/Tag-Änderungen, Löschungen, Originaldownloads, öffentlichen Links, automatische Tabellenanlage oder Hintergrundsynchronisation. Mehrere Facility-Tags an einem Bild bleiben möglich; mehrere Alias-Tags mit derselben Nummer werden nicht zusammengeführt, sondern als mehrdeutige Zuordnung abgelehnt.
 
 ## Installation
 
@@ -23,13 +24,25 @@ Das ZIP enthält den vollständigen Ordner `saltcorn-piwigo` einschließlich Tes
 Beispiel unter Linux, auszuführen mit dem Benutzer und der Umgebung der Saltcorn-Installation:
 
 ```sh
-unzip saltcorn-piwigo-0.1.0.zip -d /opt/saltcorn-plugins
+unzip saltcorn-piwigo-0.2.0.zip -d /opt/saltcorn-plugins
 saltcorn install-plugin -d /opt/saltcorn-plugins/saltcorn-piwigo
 ```
 
 Danach Saltcorn über den verwendeten Dienstmanager neu starten. Das Paket ist privat und nicht auf npm oder GitHub veröffentlicht; `saltcorn-piwigo` als npm-Quelle ist daher kein gültiger Installationsweg für diese Lieferung.
 
 Es gibt keine eigenen Laufzeit-Fremdabhängigkeiten. Die Saltcorn-Module stammen aus der vorhandenen Saltcorn-Installation; im produktiven Plugin-Ordner kein ungezieltes `npm install` ausführen, da die Entwicklungsabhängigkeiten sonst eine zusätzliche Saltcorn-Kopie erzeugen können.
+
+### Bestehende Installation aktualisieren
+
+Vorher Datenbank, Plugin-Konfiguration und View-Konfigurationen sichern. Den vorhandenen lokalen Plugin-Quellordner durch den Inhalt des neuen `saltcorn-piwigo`-Ordners ersetzen; Source und Location des bestehenden Plugin-Eintrags müssen auf diesen Ordner zeigen, nicht auf das ZIP oder dessen Elternverzeichnis.
+
+Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.2.0` sowie in der View-Konfiguration „Zuordnungsmodus“ prüfen.
+
+Im lokalen Test wurde der bestehende Plugin-Datensatz beibehalten und mit der Saltcorn-Modellfunktion `Plugin.requirePlugin(plugin, true)` neu geladen; die zurückgegebene Version wurde am bestehenden Datensatz gespeichert. Das ist kein unmittelbar im Browser ausführbarer Befehl und setzt den richtigen Saltcorn-Node-/Datenbankkontext voraus; `test/setup-field-saltcorn.js` demonstriert es ausschließlich für die isolierte Testdatenbank und darf nicht produktiv ausgeführt werden.
+
+Den oben gezeigten `install-plugin -d`-Befehl nur für eine Erstinstallation ohne bestehenden Eintrag verwenden. Bestehende Plugin-Einträge, Konfigurationen oder Cacheverzeichnisse nicht pauschal löschen; bei Ladefehlern zunächst Source, Location und Serverprotokoll prüfen.
+
+Im tatsächlichen Plugin-Ordner müssen `package.json`, `index.js` und `lib/` direkt vorhanden sein. Die gemeldeten Fehler `reading 'main'` und `reading 'configuration_workflow'` betreffen das Laden/Registrieren; die neue Zuordnungslogik ist kein Nachweis ihrer Behebung auf dem Zielserver.
 
 ### Piwigo-Dienstkonto und API-Key
 
@@ -65,7 +78,38 @@ Eine neue Saltcorn-View auf der vorhandenen Facility-Tabelle erstellen und den T
 
 In der View-Konfiguration werden Überschrift, optionales Anzeigename-Feld, Seitengröße, Mindestberechtigung und die Zuordnung festgelegt. Die View kann direkt mit ihrer Datensatz-ID aufgerufen oder als Unteransicht der Facility-Detailseite eingebunden werden.
 
-### Zuordnung über IDs
+### Exakter Vergleich über ein Saltcorn-Feld
+
+Für neue Views ist „Feldwert = [NNNN] im Piwigo-Schlagwort (exakt)“ voreingestellt. Unter „Saltcorn-Feld mit vierstelliger Facilitynummer“ das vorhandene Feld auswählen, beispielsweise `facilitynr`; wenn dieses Feld existiert, wird es vorgeschlagen.
+
+Der vollständige Feldwert muss exakt aus vier ASCII-Ziffern bestehen. Verglichen wird er mit den vier Ziffern zwischen `[` und `]` im Schlagwortnamen; beschreibender Text vor oder hinter der Klammernummer ist erlaubt.
+
+| Saltcorn-Feldwert | Piwigo-Schlagwort | Ergebnis |
+|---|---|---|
+| `0042` | `[0042] Biogasanlage Muster` | Treffer |
+| `0042` | `Biogasanlage Muster [0042]` | Treffer |
+| `1042` | `[1042] Muster` | Treffer |
+| `42` | `[0042] Muster` | Ungültiger Feldwert; kein Auffüllen |
+| `0042` | `[42] Muster` | Kein Treffer |
+| `0042` | `[00420] Muster` oder `[0042-01] Muster` | Kein Treffer |
+| `0042` | `Muster 0042` oder `[[0042]] Muster` | Kein Treffer |
+| ` 0042` oder `0042 ` | `[0042] Muster` | Ungültiger Feldwert; kein Trimmen |
+| `0042` | Ein Schlagwort mit `[0042]` und `[0178]` | Mehrdeutig; keine Freigabe |
+| `0042` | Zwei sichtbare Schlagworte mit `[0042]` | Mehrdeutig; keine Freigabe |
+
+**Führende Nullen müssen erhalten bleiben: für `0042` ein Saltcorn-Feld vom Typ String verwenden.** Ein Integer-Feld liefert den Wert `42`; dieser wird absichtlich nicht zu `0042` umgewandelt. Bereits vierstellige Integer-Werte wie `1042` sind zulässig.
+
+Der Saltcorn-Primärschlüssel bleibt nur für das Öffnen und die Berechtigungsprüfung zuständig. Beispiel: Datensatz `id=817`, `facilitynr="0042"` und Piwigo-Tag-ID `123` mit Namen `[0042] Musteranlage`; verknüpft wird ausschließlich die Nummer `0042`, nicht `817` oder `123`.
+
+Das Plugin liest die sichtbare Schlagwortliste des Piwigo-Dienstkontos und verwendet erst nach eindeutigem Namensvergleich die gefundene interne Tag-ID für den Bildabruf. Ohne eindeutigen Treffer erscheint ein Hinweis, niemals eine unbeschränkte Galerie; die gefundene Feld-/Tag-Verbindung wird oberhalb der Bilder angezeigt.
+
+### Bestehende Views von 0.1.0 umstellen
+
+Die View-Konfiguration öffnen, den Zuordnungsmodus ausdrücklich auf Feldvergleich setzen, das Nummernfeld auswählen und speichern. Die bisherige JSON-Zuordnung wird im Feldmodus ignoriert; ein fehlender Treffer fällt nicht auf die alte Zuordnung zurück.
+
+Vor der Umstellung Werteformat, eindeutige Nummern, Schreibrechte und die Sichtbarkeit der Schlagworte für das Dienstkonto prüfen. Das Plugin verändert weder Feldtypen noch gespeicherte Werte oder Piwigo-Schlagworte.
+
+### Manuelle ID-Zuordnung als Bestandsmodus
 
 Beispiel:
 
@@ -94,7 +138,11 @@ Die View selbst muss für die vorgesehenen Benutzer freigegeben sein. Zusätzlic
 
 Standardrollen sind 1 für Administrator, 40 für Mitarbeiter und 80 für Benutzer. Kleinere IDs besitzen mehr Rechte; die tatsächlich konfigurierte Rollenstruktur der Installation bleibt maßgeblich.
 
-Die Zuordnung bleibt absichtlich in der administrativen View-Konfiguration und nicht in einem gewöhnlich bearbeitbaren Datensatzfeld. Nur vertrauenswürdige Administratoren dürfen Plugin- und View-Konfiguration bearbeiten.
+**Im Feldmodus ist das Nummernfeld sicherheitsrelevant: Wer dessen Wert ändern darf, kann damit die Bildzuordnung ändern.** Das Feld daher über alle Schreibwege einschließlich Bearbeitungsviews, API und Importen vor unberechtigten Änderungen schützen; reine Ausblendung in einem Formular reicht nicht.
+
+Die fachliche Facilitynummer sollte in Saltcorn eindeutig gepflegt werden. Zwei lesbare Datensätze mit identischem Feldwert führen bewusst zur gleichen Bildgruppe; das Plugin legt keinen Unique-Constraint an und prüft nicht die gesamte Tabelle auf Dubletten.
+
+Nur vertrauenswürdige Administratoren dürfen Plugin- und View-Konfiguration bearbeiten. Im Bestandsmodus bleibt die Zuordnung ausschließlich in der administrativen View-Konfiguration.
 
 Der Integrationsbetrieb verwendet ein Piwigo-Dienstkonto: Die individuellen Piwigo-Rechte der einzelnen Saltcorn-Benutzer werden dadurch nicht automatisch abgebildet. Saltcorn ist hier das freigegebene Zugangsportal; wenn persönliche Piwigo-Rechte zwingend maßgeblich bleiben sollen, darf diese erste Version nicht ohne Erweiterung dafür verwendet werden.
 
@@ -104,7 +152,9 @@ Die Vorgabe ist 48 Bilder pro Seite, konfigurierbar von 1 bis 96. Server-seitige
 
 Vorschaubilder werden erst in der Nähe des sichtbaren Bereichs angefragt. Der Browser lädt höchstens vier Vorschauen gleichzeitig; der Plugin-Prozess begrenzt alle Piwigo-Anfragen zusammen auf vier aktive Anfragen und 128 wartende Anfragen.
 
-Jede Vorschau führt vor der Bildauslieferung eine aktuelle Bild-/Tag-Prüfung aus. Das kostet zusätzliche API-Aufrufe, verhindert aber die Verwendung einer veralteten Tag-Mitgliedschaft als Zugriffsberechtigung; 0.1.0 besitzt deshalb bewusst keinen dauerhaften Ergebnis- oder Rechtecache.
+Jede Vorschau führt vor der Bildauslieferung eine aktuelle Bild-/Tag-Prüfung aus. Im Feldmodus wird zusätzlich bei jeder Listen-, Detail- und Bildanfrage die sichtbare Schlagwortliste frisch gelesen; die Bilddetails müssen weiterhin dieselbe Tag-ID und dieselbe Klammernummer enthalten.
+
+Es gibt bewusst keinen Ergebnis- oder Rechtecache. Eine Vorschau benötigt im Feldmodus zwei JSON-Abfragen plus den Medienabruf; die zusätzliche Last der Schlagwortlisten muss mit dem realen Bestand und der erwarteten Benutzerzahl im Pilotbetrieb geprüft werden.
 
 API-Antworten sind auf 8 MiB, Bildantworten auf 12 MiB begrenzt. Es gibt keine automatische Wiederholung fehlgeschlagener Anfragen; „Aktualisieren“ startet einen neuen Abruf.
 
@@ -128,6 +178,10 @@ Die vier Sortierungen sind Aufnahmedatum absteigend/aufsteigend, Importdatum abs
 | API-Key fehlt | Variable im tatsächlichen Saltcorn-Serverprozess gesetzt? Nach Änderung neu gestartet? |
 | Piwigo verweigert Zugriff | Key vollständig, nicht abgelaufen und nicht widerrufen? Dienstkonto berechtigt? |
 | Weiterleitung | Kanonische HTTPS-URL einschließlich Unterverzeichnis verwenden; Reverse Proxy prüfen |
+| Feld muss exakt vier Ziffern enthalten | String-Wert wie `0042` verwenden; keine Leerzeichen, keine automatische Nullenergänzung |
+| Nummernfeld fehlt | In der View ein tatsächlich vorhandenes Feld auswählen |
+| Kein sichtbares Schlagwort mit `[NNNN]` | Exakte Schreibweise, zugeordnete Bilder und Sichtbarkeit für das Dienstkonto prüfen |
+| Mehrdeutige Zuordnung | Genau ein sichtbares Schlagwort mit genau einer vierstelligen Klammernummer verwenden |
 | Noch kein Schlagwort zugeordnet | Richtigen Primärschlüssel in `mapping_json` eintragen |
 | Keine Bilder sichtbar | Tag-ID, zugeordnete Bilder und Piwigo-Sichtbarkeit des Dienstkontos prüfen |
 | Bild nicht zugeordnet | Facility-Tag wurde entfernt oder falsche Bild-ID angefragt |

@@ -2,7 +2,7 @@
 const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
 const Table = require("@saltcorn/data/models/table");
-const { authenticated, integer, esc, errorResult } = require("./lib/core");
+const { authenticated, integer, esc, errorResult, mappingMode } = require("./lib/core");
 const { makeService } = require("./lib/service");
 const { render } = require("./lib/ui");
 
@@ -26,7 +26,7 @@ function makeView(pluginCfg) {
   const { routes } = makeService(Table, pluginCfg);
   return {
     name: "PiwigoFacilityBilder",
-    description: "Lesende Piwigo-Galerie mit administrativer Facility-Tag-Zuordnung",
+    description: "Lesende Piwigo-Galerie: Saltcorn-Feld exakt gegen [NNNN] im Schlagwort",
     display_state_form: false,
     configuration_workflow: () => new Workflow({
       steps: [{
@@ -38,8 +38,17 @@ function makeView(pluginCfg) {
             { name: "title", label: "Überschrift", type: "String", default: "Bilder" },
             { name: "label_field", label: "Anzeigename aus Feld (optional)", type: "String",
               attributes: { options: fields.map(f => f.name) } },
+            { name: "mapping_mode", label: "Zuordnungsmodus", type: "String", required: true,
+              default: mappingMode(context), attributes: { options: [
+                { name: "field", label: "Feldwert = [NNNN] im Piwigo-Schlagwort (exakt)" },
+                { name: "manual", label: "Bisherige manuelle Datensatz-ID / Tag-ID-Zuordnung" }
+              ] } },
+            { name: "number_field", label: "Saltcorn-Feld mit vierstelliger Facilitynummer", type: "String",
+              default: fields.some(f => f.name === "facilitynr") ? "facilitynr" : undefined,
+              attributes: { options: fields.map(f => f.name) }, showIf: { mapping_mode: "field" },
+              sublabel: "Exakter 1:1-Vergleich, z. B. 0042 = [0042]. Kein Auffüllen: 42 ist ungültig. Führende Nullen als String speichern. Änderungen dieses Feldes ändern den Bildzugriff; Schreibrechte administrativ absichern." },
             { name: "mapping_json", label: "Zuordnung: Saltcorn-Datensatz-ID zu Piwigo-Tag-ID",
-              type: "String", fieldview: "textarea", required: true, default: "{}",
+              type: "String", fieldview: "textarea", default: "{}", showIf: { mapping_mode: "manual" },
               sublabel: 'JSON-Objekt, z.B. {"42": 123, "178": 456}. Links: Primärschlüssel der Facility, NICHT automatisch deren Facilitynummer. Rechts: numerische Piwigo-Tag-ID. Ein Tag je Datensatz; keine automatischen Änderungen.' },
             { name: "page_size", label: "Bilder pro Seite (1 bis 96)", type: "Integer", default: 48 },
             { name: "min_role", label: "Maximale Rollen-ID (zusätzlich zu View- und Datensatzrechten)",
