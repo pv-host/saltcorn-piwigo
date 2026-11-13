@@ -7,7 +7,7 @@ const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQ
 
 function createMock() {
   const calls = [];
-  const state = { removed: false, outage: false, total: 120000, cap: 48, auth: true,
+  const state = { removed: false, outage: false, total: 120000, cap: 48, auth: true, mediaOrigin: null,
     tags: [{ id: 123, name: "[0042] Testanlage" }, { id: 456, name: "Anlage [0178]" }] };
   const server = http.createServer(async (req, res) => {
     if (state.outage) { res.writeHead(503); res.end("offline"); return; }
@@ -33,7 +33,7 @@ function createMock() {
       date_available: "2026-11-11 09:00:00",
       comment: "<b>Beschreibung als Text, nicht als HTML</b>", width: 640, height: 420,
       tags: [{ id: state.removed ? 999 : 123, name: state.tags[0].name }, { id: 456, name: "private other facility" }],
-      derivatives: { thumb: { url: origin + "preview.png" }, medium: { url: origin + "preview.png" } },
+      derivatives: { thumb: { url: (state.mediaOrigin || origin) + "preview.png" }, medium: { url: (state.mediaOrigin || origin) + "preview.png" } },
       element_url: origin + "original.jpg"
     });
     let result;
@@ -62,7 +62,8 @@ function createMock() {
   return { server, calls, state };
 }
 if (require.main === module) {
-  const { server } = createMock();
+  const { server, state } = createMock();
+  if (process.env.MOCK_MEDIA_HOST_MISMATCH === "1") state.mediaOrigin = "https://media.example.invalid/gallery/";
   server.listen(Number(process.env.MOCK_PORT || 8091), "127.0.0.1",
     () => console.log("Synthetic Piwigo fixture listening on loopback"));
 }

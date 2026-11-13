@@ -1,5 +1,13 @@
 # Bedienabläufe und Abnahme 0.2.0
 
+## Erweiterung 0.2.2: Abgelehnte Bildadressen
+- Piwigo-Adresse der Form `/i.php?/piwigo-galleries/...-xl.jpg` bleibt bei passender Herkunft erlaubt.
+- Neue HTTPS-Korrektur standardmäßig aus; nur gleicher Host und Standardports werden optional von HTTP auf HTTPS umgesetzt.
+- Bilddetails zeigen „Bildadresse prüfen“ nur für Administratoren, auch wenn die Bildauslieferung scheitert.
+- Diagnose zeigt Plugin-Version, geladene API-Basis und tatsächlich ausgewählte API-Vorschauadressen ohne Query, Credentials oder Fragment.
+- Fremde Benutzer, Datensätze und nicht zugeordnete Bilder bleiben gesperrt; Diagnose ruft keine Bildadresse ab.
+- Konkrete Fehlerursachen unterscheiden Protokoll, Host, Port, Pfad und Kodierung; keine pauschale Domainfreigabe.
+
 ## Erweiterung 0.2.1: API-Key in der Modulkonfiguration
 - Maskiertes Feld „Piwigo-API-Key“, Speichern und Wiederöffnen ohne Wertverlust.
 - Verbindung, Tags, Galerie und Bildvorschau funktionieren ohne API-Key-Umgebungsvariable.

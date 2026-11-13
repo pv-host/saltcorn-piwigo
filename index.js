@@ -14,11 +14,14 @@ const configuration_workflow = () => new Workflow({
         sublabel: "Kanonische URL, z.B. https://bilder.example.org/piwigo/ (ohne ws.php)." },
       { name: "api_key", label: "Piwigo-API-Key", type: "String", input_type: "password",
         attributes: { autocomplete: "new-password" },
-        sublabel: "Vollständigen API-Key hier eingeben. Hat Vorrang vor der Umgebungsvariable. Maskiert angezeigt, aber ohne zusätzliche Plugin-Verschlüsselung in der Saltcorn-Modulkonfiguration gespeichert; Datenbank und Backups schützen. Leer = Umgebungsvariable verwenden." },
+        sublabel: "Vollständige API-Key-ID und geheimen Schlüssel gemeinsam eingeben: pkid-...:SCHLUESSEL (Doppelpunkt erforderlich). Hat Vorrang vor der Umgebungsvariable. Maskiert, aber ohne zusätzliche Plugin-Verschlüsselung gespeichert; Datenbank und Backups schützen. Leer = Umgebungsvariable verwenden." },
       { name: "api_key_env", label: "Umgebungsvariable für den API-Key", type: "String",
         default: "PIWIGO_API_KEY",
         sublabel: "Optionaler Alternativweg, nur wenn oben kein API-Key eingetragen ist. Nur Variablenname; Standard PIWIGO_API_KEY. Im Saltcorn-Serverprozess setzen." },
       { name: "timeout_ms", label: "Timeout je Piwigo-Anfrage (ms)", type: "Integer", default: 15000 },
+      { name: "upgrade_media_https", label: "HTTP-Bildadressen desselben Hosts auf HTTPS korrigieren",
+        type: "Bool", default: false,
+        sublabel: "Nur bei HTTPS-Basis-URL und identischem Host mit Standardports. Hilft, wenn die API hinter einem Reverse Proxy HTTP-Vorschauadressen liefert. Keine Freigabe fremder Hosts, Ports oder Pfade; Weiterleitungen bleiben gesperrt." },
       { name: "allow_http", label: "HTTP ausdrücklich erlauben (nur abgeschottetes Testnetz)", type: "Bool", default: false,
         sublabel: "Produktiv HTTPS verwenden. Bei HTTP werden API-Key und Bilder unverschlüsselt übertragen." }
     ] })

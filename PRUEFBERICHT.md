@@ -1,4 +1,4 @@
-# Prüfbericht: saltcorn-piwigo 0.2.1
+# Prüfbericht: saltcorn-piwigo 0.2.2
 
 Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Plugin-Paket; es wurde weder im Produktiv-Saltcorn installiert noch mit der produktiven Piwigo-Instanz verbunden.
 
@@ -6,15 +6,20 @@ Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Pl
 
 Die erweiterte lesende Version wurde unter Node.js 20.20.2 mit einer echten lokalen Saltcorn-1.6.2-Installation auf SQLite erprobt. Piwigo wurde durch einen synthetischen HTTP-Nachbau des benötigten 16.5.0-API-Vertrags ersetzt.
 
-Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Hinzu kommen exakte Feld-/Klammervergleiche, Mehrdeutigkeiten, Bestandskompatibilität sowie die Key-Eingabe in der Modulkonfiguration; der aktuelle Testlauf steht in `development/evidence/unit-tests-0.2.1.tap`.
+Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Hinzu kommen exakte Feld-/Klammervergleiche, Bestandskompatibilität, Modul-Key, präzise URL-Diagnose und sichere HTTPS-Korrektur; der aktuelle Testlauf steht in `development/evidence/unit-tests-0.2.2.tap`.
 
 ## Ausgeführte Prüfungen
 
 | Bereich | Ergebnis und genaue Reichweite |
 |---|---|
 | JavaScript-Syntax | `node --check` für Einstiegspunkt, Bibliotheken und Testskripte erfolgreich |
-| Automatische Tests | 159 Tests erfolgreich, keine übersprungenen Tests |
-| Saltcorn-Installation | Bestehenden lokalen Testeintrag gezielt mit `Plugin.requirePlugin(plugin, true)` aktualisiert; Version 0.2.1 geprüft, vorhandene Plugin-Konfiguration erhalten |
+| Automatische Tests | 183 Tests erfolgreich, keine übersprungenen Tests |
+| Saltcorn-Installation | Bestehenden lokalen Testeintrag gezielt mit `Plugin.requirePlugin(plugin, true)` aktualisiert; Version 0.2.2 geprüft, vorhandene Plugin-Konfiguration erhalten |
+| i.php-Adresse | HTTPS-Adresse mit Bildpfad in der Query bei passender API-Herkunft akzeptiert; Query bleibt unverändert |
+| Differenzierte URL-Prüfung | Protokoll, Host, Port, Installationspfad, Prozentkodierung, Zugangsdaten und Fragment geprüft |
+| Optionale HTTPS-Korrektur | Automatisierter Request-Test bestätigt HTTPS-Ziel und unveränderten API-Key-Header; fremde Hosts, Sonderports und gesperrte Pfade bleiben abgelehnt; Standard aus |
+| Admin-Bilddiagnose | In Saltcorn bei erlaubten und abgelehnten Fixture-Adressen geöffnet; tatsächlich ausgewählte Varianten und geladene Basis sichtbar, ohne Medienabruf durch die Diagnose |
+| Diagnose-Geheimnisschutz | Query, Credentials, Fragment sowie im Pfad eingebetteter Test-Key werden nicht ausgegeben; Datensatz- und Bildmitgliedschaftsprüfung bleiben aktiv |
 | Modul-Key-Eingabe | Tatsächliches Passwortfeld in Saltcorn 1.6.2; Speichern, Wiederöffnen ohne Wertverlust, Leeren und erneutes Setzen erfolgreich |
 | Betrieb ohne Umgebungsvariable | Saltcorn-Prozess ausdrücklich mit `env -u PIWIGO_API_KEY` gestartet; Diagnose, Tags, Galerie, zwölf dekodierte Vorschaubilder und Detailansicht erfolgreich mit Key aus Modulkonfiguration |
 | Key-Auswahl | Modul-Key hat Vorrang; leeres Feld verwendet alternative Umgebungsvariable; ungültige Werte werden ohne Ausweichversuch abgelehnt |
@@ -50,6 +55,8 @@ Die neuen Nachweise heißen `field-desktop-0.2.0.png` und `field-mobile-0.2.0.pn
 
 Für 0.2.1 wurden Modulkonfiguration, Galeriebedienung, Vorschauen, Diagnose, Suche, Bestandsmodus, Mobilbreite und die Ablehnung fremder Datensätze/administrativer Funktionen erneut geprüft. `module-key-0.2.1.png` zeigt das neue maskierte Konfigurationsfeld; sämtliche dabei verwendeten Schlüssel sind synthetische Fixture-Werte und keine echten Zugangsdaten.
 
+Die neue Aufnahme `media-diagnostic-0.2.2.png` dokumentiert den administrativen Diagnoseablauf bei absichtlich abweichender Fixture-Bildherkunft. Die URL-Diagnose wurde auch bei 375 px ohne horizontale Überbreite geprüft; die HTTPS-Korrektur ist auf Request-Ebene mit simuliertem Fetch getestet, nicht als echte TLS-Verbindung zur Produktivinstanz.
+
 Für den Feldtest wurde ausschließlich die neue synthetische Tabelle `facility_field_qa` angelegt, Zeilenzahl 0 auf 4. Die vorhandene Fixture-Tabelle `facility_qa` wurde nicht geändert; `test/setup-field-saltcorn.js` verweigert das Überschreiben bereits bestehender Feld-Fixtures.
 
 ## API-Prüfung
@@ -63,6 +70,7 @@ Die geprüfte Standardkonfiguration begrenzt API-Bildseiten auf maximal 500 Bild
 ## Noch nicht nachgewiesen
 
 - **Reales Piwigo:** Login per echtem API-Key, reale Bildauslieferung und konkrete Album-/Privatsphärenregeln der Zielinstallation.
+- **Aktueller Bildadressenfehler:** Die vom Nutzer genannte Browser-Bildadresse wird mit dessen angegebener Basis bereits akzeptiert. Der tatsächliche API-Rückgabewert beziehungsweise die geladene Konfiguration des Zielservers ist noch nicht bekannt; eine produktive Fehlerbehebung wird daher nicht behauptet.
 - **Gemeldete Installationsfehler:** Die lokale Registrierung und beide Konfigurationsworkflows funktionieren; damit ist die Ursache der früher gemeldeten Ladefehler auf dem Zielserver nicht nachgewiesen oder behoben.
 - **Produktivdatenmenge:** Laufzeit, CPU-/Speicherlast und Parallelbetrieb mit tatsächlich 120.000 Bilddateien; die Fixture simuliert die API-Trefferzahl.
 - **Zusätzliche Schlagwortlast:** Im Feldmodus wird die sichtbare Tag-Liste je Abruf neu gelesen. Last und Latenz mit echten Tags und parallelen Nutzern sind noch zu messen.

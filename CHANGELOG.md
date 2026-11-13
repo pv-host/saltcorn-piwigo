@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.2.2
+
+Präzisere Diagnose abgelehnter Piwigo-Bildadressen und eine optionale HTTPS-Korrektur für Reverse-Proxy-Situationen. Die vom Nutzer beschriebene HTTPS-Adresse mit `i.php?...` wird bereits von der bisherigen URL-Prüfung akzeptiert; die tatsächlich abweichende API-Adresse der Zielinstallation ist noch zu ermitteln.
+
+- **Fehlertexte:** Unterscheiden Protokoll, Hostname, Port, Installationspfad, Zugangsdaten/Fragment und Prozentkodierung.
+- **Admin-Diagnose:** „Bildadresse prüfen“ in den Bilddetails zeigt geladene Plugin-Version, API-Basis, ausgewählte Thumbnail-/Preview-Adressen und den konkreten Ablehnungsgrund; keine Query oder Geheimnisse.
+- **HTTPS-Korrektur:** Standardmäßig aus; nur gleicher Host, Standardports und HTTPS-API-Basis. Keine Hostfreigabe, keine Weiterleitungen und keine Umstellung auf HTTP.
+- **API-Key-Hilfe:** Konfigurationsfeld nennt ausdrücklich das Format `pkid-...:SCHLUESSEL`.
+- **Prüfung:** 183 automatische Tests bestanden; lokale Saltcorn-/Browserprüfung gegen erlaubte und abweichende synthetische Bildadressen. Kein Nachweis einer Behebung auf dem Produktivserver.
+
 ## 0.2.1
 
 Der API-Key kann direkt in der Saltcorn-Modulkonfiguration eingegeben werden. Der exakte vierstellige Facility-Abgleich und der rein lesende Piwigo-Betrieb bleiben unverändert.

@@ -1,4 +1,4 @@
-# saltcorn-piwigo 0.2.1
+# saltcorn-piwigo 0.2.2
 
 Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltcorn 1.6.2 und Piwigo 16.5.0**; die lokale Saltcorn-Ausführung wurde mit einem synthetischen Piwigo-API-Nachbau geprüft, nicht mit der produktiven Piwigo-Instanz.
 
@@ -10,6 +10,7 @@ Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltco
 - **Exakte Feldzuordnung:** Wählbares Saltcorn-Feld, z. B. `facilitynr="0042"`, wird 1:1 mit `[0042]` im Namen eines Piwigo-Schlagworts verglichen. Kein Auffüllen oder unscharfer Vergleich.
 - **Bestandsschutz:** Bereits vorhandene 0.1.0-Views behalten ihre manuelle Datensatz-ID/Tag-ID-Zuordnung, bis der Administrator ausdrücklich auf Feldzuordnung umstellt.
 - **Administration:** Verbindung prüfen und vorhandene Tag-IDs suchen, ausschließlich für Saltcorn-Administratoren.
+- **Bildadressdiagnose:** In den Bilddetails „Bildadresse prüfen“ wählen. Zeigt nur Administratoren die laufende Plugin-Version, geladene API-Basis und die tatsächlich ausgewählten API-Vorschauadressen ohne Query, Zugangsdaten oder Fragmente.
 - **Datensatzrechte:** Für jeden Listen-, Detail- und Bildabruf erneute Prüfung über Saltcorn `getRow(..., {forUser})`; für Bilddaten zusätzlich aktuelle Tag-Mitgliedschaft über Piwigo.
 - **Kein Vollimport:** Nur die angeforderte Ergebnisseite wird gelesen. Vorschauen werden bei Bedarf geladen.
 
@@ -24,7 +25,7 @@ Das ZIP enthält den vollständigen Ordner `saltcorn-piwigo` einschließlich Tes
 Beispiel unter Linux, auszuführen mit dem Benutzer und der Umgebung der Saltcorn-Installation:
 
 ```sh
-unzip saltcorn-piwigo-0.2.1.zip -d /opt/saltcorn-plugins
+unzip saltcorn-piwigo-0.2.2.zip -d /opt/saltcorn-plugins
 saltcorn install-plugin -d /opt/saltcorn-plugins/saltcorn-piwigo
 ```
 
@@ -36,7 +37,7 @@ Es gibt keine eigenen Laufzeit-Fremdabhängigkeiten. Die Saltcorn-Module stammen
 
 Vorher Datenbank, Plugin-Konfiguration und View-Konfigurationen sichern. Den vorhandenen lokalen Plugin-Quellordner durch den Inhalt des neuen `saltcorn-piwigo`-Ordners ersetzen; Source und Location des bestehenden Plugin-Eintrags müssen auf diesen Ordner zeigen, nicht auf das ZIP oder dessen Elternverzeichnis.
 
-Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.2.1` sowie in der Modulkonfiguration „Piwigo-API-Key“ prüfen.
+Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.2.2` sowie in den Bilddetails den Administrator-Button „Bildadresse prüfen“ kontrollieren.
 
 Im lokalen Test wurde der bestehende Plugin-Datensatz beibehalten und mit der Saltcorn-Modellfunktion `Plugin.requirePlugin(plugin, true)` neu geladen; die zurückgegebene Version wurde am bestehenden Datensatz gespeichert. Das ist kein unmittelbar im Browser ausführbarer Befehl und setzt den richtigen Saltcorn-Node-/Datenbankkontext voraus; `test/setup-field-saltcorn.js` demonstriert es ausschließlich für die isolierte Testdatenbank und darf nicht produktiv ausgeführt werden.
 
@@ -75,9 +76,14 @@ In Saltcorn die Konfiguration des Plugins `saltcorn-piwigo` öffnen. Folgende We
 | Piwigo-API-Key | Vollständiger API-Key; maskiertes Eingabefeld, Vorrang vor der Umgebungsvariable |
 | Umgebungsvariable | Optionaler Alternativweg bei leerem API-Key-Feld; Standard `PIWIGO_API_KEY`, nur der Variablenname |
 | Timeout | `15000` Millisekunden; zulässig 1000 bis 60000 |
+| HTTP-Bildadressen desselben Hosts auf HTTPS korrigieren | Standard aus; ausschließlich für HTTP-Vorschauadressen desselben HTTPS-API-Hosts mit Standardports |
 | HTTP erlauben | Produktiv ausgeschaltet lassen |
 
 Die URL muss unmittelbar auf die tatsächliche Installation zeigen. HTTP-Weiterleitungen, externe Bildhosts/CDNs und Vorschauadressen außerhalb des konfigurierten Piwigo-Pfads werden absichtlich abgelehnt; die TLS-Zertifikatsprüfung wird nicht abgeschaltet.
+
+Die optionale HTTPS-Korrektur ersetzt ausschließlich `http:` durch `https:`, wenn die API-Basis HTTPS verwendet, beide Hostnamen identisch sind und beide URLs Standardports nutzen. Pfad und Query bleiben erhalten; abweichende Hosts, Sonderports, Pfade, Zugangsdaten, Fragmente und gesperrte Pfadkodierungen werden dadurch nicht freigegeben.
+
+Diese Korrektur ist keine Weiterleitungsfreigabe: Der Abruf geht unmittelbar an die geprüfte HTTPS-Adresse. „HTTP erlauben“ ist kein Ersatz dafür und sollte produktiv ausgeschaltet bleiben.
 
 ## Facility-Ansicht einrichten
 
@@ -170,7 +176,7 @@ Die vier Sortierungen sind Aufnahmedatum absteigend/aufsteigend, Importdatum abs
 ## Sicherheit und Betriebsgrenzen
 
 - **Piwigo-Schreibschutz:** Nur fünf fest definierte lesende Web-API-Methoden sind im Client freigegeben. Die Einschränkung des Dienstkontos bleibt zusätzlich notwendig.
-- **Bildzugriff:** Kein öffentliches Bild-URL wird an den Browser weitergegeben; der Browser erhält die geprüften Bildbytes über Saltcorn und verwendet temporäre Blob-URLs.
+- **Bildzugriff:** Normale Galeriebenutzer erhalten geprüfte Bildbytes über Saltcorn und temporäre Blob-URLs, keine direkten Piwigo-Bild-URLs. Die administrative Bildadressdiagnose zeigt Herkunft und Pfad, aber keine Query, Zugangsdaten oder Fragmente.
 - **Ausgabe:** Titel und Metadaten werden als Text ausgegeben; HTML-Beschreibungen erscheinen gegebenenfalls als sichtbarer Quelltext. SVG und HTML sind als Vorschau gesperrt.
 - **Cache:** Antworten erhalten `private, no-store`; bereits vom Benutzer angesehene oder gespeicherte Bilder können technisch nicht zurückgerufen werden.
 - **Mehrfachzuordnungen:** Ein Bild ist über jede zulässige Facility-Zuordnung sichtbar. Andere Facility-Tags, Albumlisten und GPS-Daten werden nicht ausgegeben.
@@ -179,6 +185,24 @@ Die vier Sortierungen sind Aufnahmedatum absteigend/aufsteigend, Importdatum abs
 - **Mandantenbetrieb:** Eine Umgebungsvariable gehört zum Serverprozess. Administratoren, die Plugin-Konfiguration bearbeiten können, müssen vertrauenswürdig sein; diese Version ist nicht für gegeneinander nicht vertrauenswürdige Saltcorn-Mandantenadministratoren ausgelegt.
 
 ## Fehlerbehebung
+
+### „Bildadresse außerhalb der freigegebenen Piwigo-Instanz“
+
+Die Meldung stammt aus der URL-Prüfung des Plugins, nicht aus der API-Key-Authentifizierung. Verglichen werden die geladene Piwigo-Basis-URL und die in `pwg.images.getInfo` zurückgelieferte ausgewählte Vorschauadresse; die Domain der Saltcorn-Seite ist dafür nicht maßgeblich.
+
+Eine Piwigo-Adresse der Form `https://piwigo.example.org/i.php?/piwigo-galleries/...-xl.jpg` ist bei Basis `https://piwigo.example.org/` zulässig. Die Adresse aus der Piwigo-Browseransicht muss jedoch nicht dieselbe Variante oder Herkunft haben wie die von der API gelieferte Thumbnail-/Medium-Adresse.
+
+Als Administrator eine betroffene Bildkarte öffnen und in den Bilddetails **„Bildadresse prüfen“** anklicken, auch wenn die Vorschau selbst fehlschlägt. Die Diagnose führt keinen Bildabruf aus; `allowed: true` bestätigt nur die URL-Prüfung, nicht Erreichbarkeit oder Bildinhalt.
+
+- **`plugin_version`:** Tatsächlich geladene Plugin-Version; erwartet wird `0.2.2`.
+- **`api_base`:** Tatsächlich geladene Basis-Konfiguration, nicht nur ein eventuell noch nicht übernommener Formularwert.
+- **`returned`:** Herkunft und Pfad der jeweils ausgewählten API-Vorschau; `thumb` und `preview` werden getrennt geprüft.
+- **`reason`:** Konkreter Ablehnungsgrund bei Protokoll, Hostname, Port, Installationspfad oder Prozentkodierung.
+- **`effective` / `https_upgraded`:** Tatsächlich erlaubte Zieladresse und Hinweis, ob die optionale HTTPS-Korrektur angewendet wurde.
+
+Nur wenn `returned.origin` HTTP für denselben Host liefert, während `api_base.origin` HTTPS verwendet und beide Standardports nutzen, die Option **„HTTP-Bildadressen desselben Hosts auf HTTPS korrigieren“** einschalten und speichern. Bei anderem Host, Port oder Pfad die Piwigo-/Proxy-/Modulkonfiguration prüfen; nicht die Sicherheitsprüfung pauschal abschalten oder die Saltcorn-Domain als Bildserver freigeben.
+
+Die Diagnose enthält keine Query-Werte oder API-Keys, kann aber interne Hostnamen und Pfade zeigen. Diese Informationen nur gezielt für die Fehleranalyse teilen.
 
 | Meldung / Verhalten | Prüfen |
 |---|---|

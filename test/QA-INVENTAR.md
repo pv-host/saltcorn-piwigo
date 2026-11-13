@@ -4,6 +4,8 @@ Die Abnahme trennt automatische Vertragstests, echte Saltcorn-Ausführung und Pi
 
 ## Zu prüfende Bedienabläufe
 
+- **Bildadressdiagnose:** Administrator-Button im Detaildialog, auch bei gesperrter Vorschau. Protokoll-/Host-/Port-/Pfadfehler erkennbar; Query und Geheimnisse ausgeblendet; kein Medienabruf durch die Diagnose.
+- **HTTPS-Korrektur:** Standard aus; Einschalten und Speichern im Modulformular; nur derselbe Host mit Standardports darf nach HTTPS korrigiert werden.
 - **Modul-Key:** Passwortfeld, Speichern und Wiederöffnen; Verbindung und Bilder ohne gesetzte API-Key-Umgebungsvariable; keine Ausgabe in Galerie oder Diagnose. Leeres Feld verwendet weiterhin den bisherigen Umgebungsvariablenweg.
 - **Feldzuordnung:** Wählbares Feld; `0042` exakt gegen `[0042]`, keine Nullenergänzung, keine Leerzeichenbereinigung, kein Teilstringvergleich.
 - **Eindeutigkeit:** Fehlende Treffer, mehrere passende Tags oder mehrere Klammernummern im passenden Tag sperren den Zugriff.
