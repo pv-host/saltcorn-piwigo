@@ -48,7 +48,7 @@ test("write methods absent", () => {
   for (const method of ["pwg.images.setInfo", "pwg.tags.add", "pwg.images.delete", "pwg.session.login"])
     assert.equal(READ_METHODS.has(method), false);
 });
-test("key must be in environment", () => assert.throws(() => new Client({ base_url: base.href }, { env: {} }), /fehlt/));
+test("without configured key an environment key is required", () => assert.throws(() => new Client({ base_url: base.href }, { env: {} }), /fehlt/));
 test("CRLF key rejected", () => assert.throws(() => new Client({ base_url: base.href }, { env: { PIWIGO_API_KEY: "a\r\nb" } }), /fehlt/));
 test("UI escapes titles and script contexts", () => {
   const html = render({ id: 42, title: "</h2><script>evil()</script>", viewname: "</script><script>bad()", admin: false });

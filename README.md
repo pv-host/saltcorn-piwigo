@@ -1,10 +1,10 @@
-# saltcorn-piwigo 0.2.0
+# saltcorn-piwigo 0.2.1
 
 Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltcorn 1.6.2 und Piwigo 16.5.0**; die lokale Saltcorn-Ausführung wurde mit einem synthetischen Piwigo-API-Nachbau geprüft, nicht mit der produktiven Piwigo-Instanz.
 
 ## Enthaltene Funktionen
 
-- **Eine Piwigo-Instanz:** Konfigurierbare Basis-URL, serverseitiger API-Key und Timeout.
+- **Eine Piwigo-Instanz:** Konfigurierbare Basis-URL, API-Key direkt im maskierten Modul-Konfigurationsfeld und Timeout; Umgebungsvariable weiterhin als Alternative.
 - **Facility-Galerie:** Kacheln oder Liste, Seitenwechsel, vier Sortierungen und manuelle Aktualisierung.
 - **Bilddetails:** Größere Vorschau, Dateiname, Datum und Beschreibung als sicherer Text.
 - **Exakte Feldzuordnung:** Wählbares Saltcorn-Feld, z. B. `facilitynr="0042"`, wird 1:1 mit `[0042]` im Namen eines Piwigo-Schlagworts verglichen. Kein Auffüllen oder unscharfer Vergleich.
@@ -24,7 +24,7 @@ Das ZIP enthält den vollständigen Ordner `saltcorn-piwigo` einschließlich Tes
 Beispiel unter Linux, auszuführen mit dem Benutzer und der Umgebung der Saltcorn-Installation:
 
 ```sh
-unzip saltcorn-piwigo-0.2.0.zip -d /opt/saltcorn-plugins
+unzip saltcorn-piwigo-0.2.1.zip -d /opt/saltcorn-plugins
 saltcorn install-plugin -d /opt/saltcorn-plugins/saltcorn-piwigo
 ```
 
@@ -36,7 +36,7 @@ Es gibt keine eigenen Laufzeit-Fremdabhängigkeiten. Die Saltcorn-Module stammen
 
 Vorher Datenbank, Plugin-Konfiguration und View-Konfigurationen sichern. Den vorhandenen lokalen Plugin-Quellordner durch den Inhalt des neuen `saltcorn-piwigo`-Ordners ersetzen; Source und Location des bestehenden Plugin-Eintrags müssen auf diesen Ordner zeigen, nicht auf das ZIP oder dessen Elternverzeichnis.
 
-Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.2.0` sowie in der View-Konfiguration „Zuordnungsmodus“ prüfen.
+Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.2.1` sowie in der Modulkonfiguration „Piwigo-API-Key“ prüfen.
 
 Im lokalen Test wurde der bestehende Plugin-Datensatz beibehalten und mit der Saltcorn-Modellfunktion `Plugin.requirePlugin(plugin, true)` neu geladen; die zurückgegebene Version wurde am bestehenden Datensatz gespeichert. Das ist kein unmittelbar im Browser ausführbarer Befehl und setzt den richtigen Saltcorn-Node-/Datenbankkontext voraus; `test/setup-field-saltcorn.js` demonstriert es ausschließlich für die isolierte Testdatenbank und darf nicht produktiv ausgeführt werden.
 
@@ -48,9 +48,15 @@ Im tatsächlichen Plugin-Ordner müssen `package.json`, `index.js` und `lib/` di
 
 Ein eigenes normales Piwigo-Konto verwenden und diesem ausschließlich die für Saltcorn vorgesehenen Alben und Bilder freigeben. Anschließend in dessen Piwigo-Profil einen persönlichen API-Key erzeugen; Piwigo dokumentiert dafür die Profilfunktion „API Keys“ und den Header `X-PIWIGO-API` ([Piwigo-Web-API](https://github.com/Piwigo/Piwigo/wiki/Piwigo-Web-API)).
 
-Der vollständige Wert im Format `pkid-…:…` muss dem Saltcorn-Serverprozess als Umgebungsvariable `PIWIGO_API_KEY` bereitgestellt werden. Den echten Schlüssel nicht in die View-Konfiguration, Quelltexte, Tickets oder Screenshots kopieren.
+Den vollständigen Wert im Format `pkid-…:…` direkt im Feld **„Piwigo-API-Key“ der Modulkonfiguration** eintragen und speichern. Danach in einer Galerie als Administrator „Verbindung prüfen“ ausführen; für diesen Weg ist keine Umgebungsvariable erforderlich.
 
-Für systemd kann beispielsweise eine bestehende geschützte EnvironmentFile genutzt werden:
+Das Feld wird als Passwortfeld maskiert angezeigt, der gespeicherte Wert bleibt beim erneuten Öffnen erhalten. **Die Maskierung ist keine Verschlüsselung:** Das Plugin speichert den Key in der Saltcorn-Modulkonfiguration ohne zusätzliche Verschlüsselung; entsprechend berechtigte Administratoren, Datenbankzugriffe sowie Backups oder Konfigurationsexporte können den Wert enthalten.
+
+Die Modulkonfiguration nur über HTTPS und durch vertrauenswürdige Administratoren bearbeiten. Den echten Schlüssel nicht in die View-Konfiguration, Quelltexte, Tickets oder Screenshots kopieren; normale Galerieansichten und Diagnoseantworten geben ihn nicht aus.
+
+Ein nicht leeres Modul-Key-Feld hat Vorrang vor der Umgebungsvariable. Bei ungültigem oder abgelehntem Modul-Key erfolgt kein Ausweichversuch mit einem anderen Schlüssel; zum Wechsel auf den Umgebungsvariablenweg das Modul-Key-Feld ausdrücklich leeren und speichern.
+
+Alternativ kann bei leerem Modul-Key-Feld weiterhin die Umgebungsvariable `PIWIGO_API_KEY` verwendet werden. Für systemd kann beispielsweise eine bestehende geschützte EnvironmentFile genutzt werden:
 
 ```ini
 # Inhalt einer nur administrativ lesbaren Environment-Datei:
@@ -66,7 +72,8 @@ In Saltcorn die Konfiguration des Plugins `saltcorn-piwigo` öffnen. Folgende We
 | Feld | Beispiel / Bedeutung |
 |---|---|
 | Piwigo-Basis-URL | `https://bilder.example.org/piwigo/`, ohne `ws.php` |
-| Umgebungsvariable | `PIWIGO_API_KEY`, nur der Variablenname |
+| Piwigo-API-Key | Vollständiger API-Key; maskiertes Eingabefeld, Vorrang vor der Umgebungsvariable |
+| Umgebungsvariable | Optionaler Alternativweg bei leerem API-Key-Feld; Standard `PIWIGO_API_KEY`, nur der Variablenname |
 | Timeout | `15000` Millisekunden; zulässig 1000 bis 60000 |
 | HTTP erlauben | Produktiv ausgeschaltet lassen |
 
@@ -175,7 +182,7 @@ Die vier Sortierungen sind Aufnahmedatum absteigend/aufsteigend, Importdatum abs
 
 | Meldung / Verhalten | Prüfen |
 |---|---|
-| API-Key fehlt | Variable im tatsächlichen Saltcorn-Serverprozess gesetzt? Nach Änderung neu gestartet? |
+| API-Key fehlt oder ist ungültig | Vollständigen Key in der Modulkonfiguration speichern; keine Leerzeichen/Zeilenumbrüche. Alternativ bei leerem Feld die Server-Umgebungsvariable prüfen |
 | Piwigo verweigert Zugriff | Key vollständig, nicht abgelaufen und nicht widerrufen? Dienstkonto berechtigt? |
 | Weiterleitung | Kanonische HTTPS-URL einschließlich Unterverzeichnis verwenden; Reverse Proxy prüfen |
 | Feld muss exakt vier Ziffern enthalten | String-Wert wie `0042` verwenden; keine Leerzeichen, keine automatische Nullenergänzung |

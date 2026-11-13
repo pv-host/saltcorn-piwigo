@@ -4,7 +4,7 @@ Das Plugin ist ein serverseitig vermittelter, lesender Zugang zu einer konfiguri
 
 ## Vertrauensgrenzen
 
-- **Administratoren:** Können Ziel-URL und Namen der Secret-Umgebungsvariable festlegen. Sie sind vertrauenswürdig; Konfiguration ist keine Sicherheitsgrenze gegen einen bösartigen Saltcorn-Administrator.
+- **Administratoren:** Können Ziel-URL, API-Key in der Modulkonfiguration und alternativ den Namen der Secret-Umgebungsvariable festlegen. Sie sind vertrauenswürdig; Konfiguration ist keine Sicherheitsgrenze gegen einen bösartigen Saltcorn-Administrator.
 - **Nummernfeld:** Im Feldmodus legt der gespeicherte Wert den Bildzugriff fest. Unberechtigte Änderungen über Bearbeitungsviews, API oder Importe müssen administrativ ausgeschlossen werden; das Plugin kann diese Schreibrechte nicht automatisch absichern.
 - **Browserparameter:** Können weder Nummernfeld noch Tag-ID überschreiben. Der Wert wird ausschließlich aus dem erneut berechtigungsgeprüften Saltcorn-Datensatz gelesen.
 - **Eindeutigkeit:** Identische Nummern in zwei Saltcorn-Datensätzen führen zur gleichen Bildgruppe. Die Eindeutigkeit ist administrativ zu pflegen; das Plugin verändert keine Tabellenconstraints.
@@ -19,7 +19,8 @@ Das Plugin ist ein serverseitig vermittelter, lesender Zugang zu einer konfiguri
 - **Zuordnung:** Exakt vier ASCII-Ziffern ohne Normalisierung. Keine Treffer oder mehrere sichtbare Tags beziehungsweise mehrere Klammernummern im passenden Tag sperren den Abruf; keine Ersatzzuordnung und kein „alle Bilder“-Fallback.
 - **API-Auswahl:** Nur `pwg.getVersion`, `pwg.session.getStatus`, `pwg.tags.getList`, `pwg.tags.getImages`, `pwg.images.getInfo`.
 - **Transport:** HTTPS als Standard, keine Redirects, kein Abschalten der Zertifikatsprüfung.
-- **Secrets:** Nur serverseitige Umgebungsvariable, keine Rückgabe des Keys und keine Ausgabe fremder API-Fehlermeldungen.
+- **Secrets:** Modulkonfiguration oder alternativ serverseitige Umgebungsvariable. Das Admin-Eingabefeld ist maskiert, nicht zusätzlich durch das Plugin verschlüsselt; gespeicherte Konfiguration, Admin-Formular, Datenbank und entsprechende Exporte/Backups sind vertraulich zu behandeln. Keine Rückgabe an Galeriebenutzer oder über Diagnoseantworten und keine Ausgabe fremder API-Fehlermeldungen.
+- **Key-Auswahl:** Nicht leerer Modul-Key hat Vorrang; Umgebungsvariable nur bei leerem Feld. Ein ungültiger Key wird nicht durch ein anderes Dienstkonto ersetzt; Steuerzeichen, Leerzeichen, Nicht-ASCII und überlange Werte werden abgelehnt.
 - **Ressourcen:** Deadline, Antwortgrößenlimit, Seitengrößenlimit und begrenzte Warteschlange pro Prozess.
 - **Browser:** CSRF-Integration in Saltcorn, Textausgabe statt HTML, Bild-MIME-Allowlist, `nosniff`, `no-store`.
 

@@ -18,7 +18,7 @@ const { authorize } = require("../lib/core");
   assert.ok(!Table.findOne({ name: "facility_field_qa" }), "Refusing to overwrite existing field fixtures");
   const savedConfig = JSON.stringify(plugin.configuration);
   const loaded = await Plugin.requirePlugin(plugin, true);
-  assert.equal(loaded.version, "0.2.0");
+  assert.equal(loaded.version, require("../package.json").version);
   assert.equal(typeof loaded.plugin_module.configuration_workflow, "function");
   plugin.version = loaded.version;
   await plugin.upsert();
@@ -54,7 +54,7 @@ const { authorize } = require("../lib/core");
   await assert.rejects(authorize(Table, table.id, cfg, { id: 820 }, { user }), /exakt vier/);
   await View.create({ name: "Piwigo_Field", table_id: table.id, viewtemplate: "PiwigoFacilityBilder",
     min_role: 40, configuration: cfg });
-  console.log("PASS: 0.2.0 load, preserved plugin config, new/legacy form defaults, field matching and real owner filtering.");
+  console.log("PASS: plugin load, preserved plugin config, new/legacy form defaults, field matching and real owner filtering.");
   console.log("Synthetic table only: facility_field_qa row count 0 -> 4. Existing facility_qa unchanged.");
   console.log("PASS: field view /view/Piwigo_Field?id=817; denial 818; missing 819; invalid 820.");
   await db.close();

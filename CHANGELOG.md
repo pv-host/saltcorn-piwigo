@@ -1,5 +1,15 @@
 # Änderungen
 
+## 0.2.1
+
+Der API-Key kann direkt in der Saltcorn-Modulkonfiguration eingegeben werden. Der exakte vierstellige Facility-Abgleich und der rein lesende Piwigo-Betrieb bleiben unverändert.
+
+- **Eingabe:** Maskiertes Feld „Piwigo-API-Key“; gespeicherter Wert beim Wiederöffnen erhalten.
+- **Bestandsschutz:** Leeres Feld verwendet weiterhin die bisherige Umgebungsvariable; ein eingegebener Modul-Key hat Vorrang.
+- **Fehlerbehandlung:** Keine Ausgabe des Keys in Galerie, Diagnose oder Fehlern; kein stiller Ersatzversuch bei ungültigem Modul-Key.
+- **Speicherung:** Keine zusätzliche Plugin-Verschlüsselung; Hinweis zum Schutz der Konfiguration, Datenbank und Backups.
+- **Prüfung:** 159 automatische Tests bestanden; tatsächliche Saltcorn-1.6.2-Konfiguration sowie Galerie mit Modul-Key ohne API-Key-Umgebungsvariable geprüft, gegen synthetische Piwigo-Fixture.
+
 ## 0.2.0
 
 Feldbasierte Zuordnung entsprechend der Anforderung eines exakten 1:1-Vergleichs vierstelliger Nummern. Die Erweiterung bleibt vollständig lesend gegenüber Piwigo und verändert keine vorhandenen Saltcorn-Tabellen.

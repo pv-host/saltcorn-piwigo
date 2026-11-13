@@ -1,5 +1,13 @@
 # Bedienabläufe und Abnahme 0.2.0
 
+## Erweiterung 0.2.1: API-Key in der Modulkonfiguration
+- Maskiertes Feld „Piwigo-API-Key“, Speichern und Wiederöffnen ohne Wertverlust.
+- Verbindung, Tags, Galerie und Bildvorschau funktionieren ohne API-Key-Umgebungsvariable.
+- Eingegebener Modul-Key hat Vorrang; ungültiger Key löst keinen Ersatzversuch aus.
+- Leeres Feld erhält die bisherige Umgebungsvariablen-Alternative.
+- Keine Ausgabe des Keys in Galerie-HTML, Diagnose, Fehlerantworten oder normalen Benutzerrouten.
+- Warnhinweis zur Speicherung in der Modulkonfiguration und zum Schutz von Datenbank/Backups.
+
 Die bestehende Galerie wurde vor Änderung lokal geöffnet: erste Seite, zwölf Karten und Seitennavigation sind vorhanden. Piwigo wird für die Tests ausschließlich synthetisch nachgebildet.
 
 ## Feldbasierte Zuordnung

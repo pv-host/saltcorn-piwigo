@@ -12,9 +12,12 @@ const configuration_workflow = () => new Workflow({
     form: async () => new Form({ fields: [
       { name: "base_url", label: "Piwigo-Basis-URL", type: "String", required: true,
         sublabel: "Kanonische URL, z.B. https://bilder.example.org/piwigo/ (ohne ws.php)." },
+      { name: "api_key", label: "Piwigo-API-Key", type: "String", input_type: "password",
+        attributes: { autocomplete: "new-password" },
+        sublabel: "Vollständigen API-Key hier eingeben. Hat Vorrang vor der Umgebungsvariable. Maskiert angezeigt, aber ohne zusätzliche Plugin-Verschlüsselung in der Saltcorn-Modulkonfiguration gespeichert; Datenbank und Backups schützen. Leer = Umgebungsvariable verwenden." },
       { name: "api_key_env", label: "Umgebungsvariable für den API-Key", type: "String",
-        required: true, default: "PIWIGO_API_KEY",
-        sublabel: "Nur Variablenname, NICHT den Schlüssel eintragen. Im Saltcorn-Serverprozess setzen." },
+        default: "PIWIGO_API_KEY",
+        sublabel: "Optionaler Alternativweg, nur wenn oben kein API-Key eingetragen ist. Nur Variablenname; Standard PIWIGO_API_KEY. Im Saltcorn-Serverprozess setzen." },
       { name: "timeout_ms", label: "Timeout je Piwigo-Anfrage (ms)", type: "Integer", default: 15000 },
       { name: "allow_http", label: "HTTP ausdrücklich erlauben (nur abgeschottetes Testnetz)", type: "Bool", default: false,
         sublabel: "Produktiv HTTPS verwenden. Bei HTTP werden API-Key und Bilder unverschlüsselt übertragen." }

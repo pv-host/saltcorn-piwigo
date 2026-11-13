@@ -1,4 +1,4 @@
-# Prüfbericht: saltcorn-piwigo 0.2.0
+# Prüfbericht: saltcorn-piwigo 0.2.1
 
 Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Plugin-Paket; es wurde weder im Produktiv-Saltcorn installiert noch mit der produktiven Piwigo-Instanz verbunden.
 
@@ -6,15 +6,19 @@ Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Pl
 
 Die erweiterte lesende Version wurde unter Node.js 20.20.2 mit einer echten lokalen Saltcorn-1.6.2-Installation auf SQLite erprobt. Piwigo wurde durch einen synthetischen HTTP-Nachbau des benötigten 16.5.0-API-Vertrags ersetzt.
 
-Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Hinzu kommen exakte Feld-/Klammervergleiche, Mehrdeutigkeiten, Bestandskompatibilität und Änderungen während der Nutzung; der aktuelle Testlauf steht in `development/evidence/unit-tests-0.2.0.tap`.
+Die automatischen Tests prüfen Eingabevalidierung, Rollen, Datensatzkontext, Tag-Mitgliedschaft, Pagination, URL-Grenzen, Geheimnisschutz, Ausgabe, Timeouts, Ressourcenlimits und die Sperre von Schreibmethoden. Hinzu kommen exakte Feld-/Klammervergleiche, Mehrdeutigkeiten, Bestandskompatibilität sowie die Key-Eingabe in der Modulkonfiguration; der aktuelle Testlauf steht in `development/evidence/unit-tests-0.2.1.tap`.
 
 ## Ausgeführte Prüfungen
 
 | Bereich | Ergebnis und genaue Reichweite |
 |---|---|
 | JavaScript-Syntax | `node --check` für Einstiegspunkt, Bibliotheken und Testskripte erfolgreich |
-| Automatische Tests | 138 Tests erfolgreich, keine übersprungenen Tests |
-| Saltcorn-Installation | Bestehenden lokalen Testeintrag gezielt mit `Plugin.requirePlugin(plugin, true)` aktualisiert; Version 0.2.0 und Workflow-Export geprüft, Plugin-Konfiguration erhalten |
+| Automatische Tests | 159 Tests erfolgreich, keine übersprungenen Tests |
+| Saltcorn-Installation | Bestehenden lokalen Testeintrag gezielt mit `Plugin.requirePlugin(plugin, true)` aktualisiert; Version 0.2.1 geprüft, vorhandene Plugin-Konfiguration erhalten |
+| Modul-Key-Eingabe | Tatsächliches Passwortfeld in Saltcorn 1.6.2; Speichern, Wiederöffnen ohne Wertverlust, Leeren und erneutes Setzen erfolgreich |
+| Betrieb ohne Umgebungsvariable | Saltcorn-Prozess ausdrücklich mit `env -u PIWIGO_API_KEY` gestartet; Diagnose, Tags, Galerie, zwölf dekodierte Vorschaubilder und Detailansicht erfolgreich mit Key aus Modulkonfiguration |
+| Key-Auswahl | Modul-Key hat Vorrang; leeres Feld verwendet alternative Umgebungsvariable; ungültige Werte werden ohne Ausweichversuch abgelehnt |
+| Geheimnisschutz | Key nicht im Galerie-HTML für Administrator oder normalen Benutzer; nicht in Diagnose oder abgefangenen API-Fehlern; normale Benutzer erhalten kein Modul-Key-Formular |
 | Konfigurationsformulare | Plugin- und View-Workflow erzeugt, im Browser gespeichert; Moduswechsel blendet JSON-Feld beziehungsweise Feldwahl passend ein |
 | Exakter Vergleich | Datensatz 817 mit String `0042` findet ausschließlich Tag 123 mit `[0042] Testanlage`; Primärschlüssel und Browserparameter ersetzen den Feldwert nicht |
 | Keine Normalisierung | `42`, Leerzeichen einschließlich Zeilenumbruch, falsche Länge, Nicht-ASCII-Ziffern und geklammerter Saltcorn-Feldwert abgelehnt |
@@ -44,6 +48,8 @@ Die Screenshots in `development/evidence/` zeigen die Galerie in der echten loka
 
 Die neuen Nachweise heißen `field-desktop-0.2.0.png` und `field-mobile-0.2.0.png`; ältere Screenshots dokumentieren den Bestandsmodus. Die Browserprüfungen folgten `development/FLOWS.md`, einschließlich Feldkonfiguration, Galerie, Diagnose, Suche, Fehlern, Mobilansicht und Besitzerrechten.
 
+Für 0.2.1 wurden Modulkonfiguration, Galeriebedienung, Vorschauen, Diagnose, Suche, Bestandsmodus, Mobilbreite und die Ablehnung fremder Datensätze/administrativer Funktionen erneut geprüft. `module-key-0.2.1.png` zeigt das neue maskierte Konfigurationsfeld; sämtliche dabei verwendeten Schlüssel sind synthetische Fixture-Werte und keine echten Zugangsdaten.
+
 Für den Feldtest wurde ausschließlich die neue synthetische Tabelle `facility_field_qa` angelegt, Zeilenzahl 0 auf 4. Die vorhandene Fixture-Tabelle `facility_qa` wurde nicht geändert; `test/setup-field-saltcorn.js` verweigert das Überschreiben bereits bestehender Feld-Fixtures.
 
 ## API-Prüfung
@@ -69,4 +75,4 @@ Die geprüfte Standardkonfiguration begrenzt API-Bildseiten auf maximal 500 Bild
 
 Das Paket zunächst in einer Testinstanz mit einem eingeschränkten normalen Piwigo-Konto installieren. Anschließend mindestens eine kleine, eine umfangreiche und eine gesperrte Facility prüfen; direkte Piwigo-Dateiadressen zusätzlich ohne Anmeldung auf Vertraulichkeit testen.
 
-Erst nach dieser Prüfung für weitere Facilities freigeben. API-Key und personenbezogene Bilddaten waren weder Bestandteil der lokalen Tests noch des ausgelieferten Pakets.
+Erst nach dieser Prüfung für weitere Facilities freigeben. Echte API-Keys und personenbezogene Bilddaten waren weder Bestandteil der lokalen Tests noch des ausgelieferten Pakets.

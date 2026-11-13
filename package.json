@@ -1,10 +1,9 @@
 {
   "name": "saltcorn-piwigo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn",
   "main": "index.js",
   "license": "MIT",
-  "private": true,
   "engines": { "node": ">=18" },
   "scripts": { "test": "node --test test/*.test.js" },
   "files": ["index.js", "lib", "README.md", "CHANGELOG.md", "SECURITY.md", "LICENSE"],
