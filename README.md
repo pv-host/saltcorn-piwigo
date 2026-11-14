@@ -1,4 +1,4 @@
-# saltcorn-piwigo 0.3.0
+# saltcorn-piwigo 0.3.1
 
 Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltcorn 1.6.2 und Piwigo 16.5.0**; die lokale Saltcorn-Ausführung wurde mit einem synthetischen Piwigo-API-Nachbau geprüft, nicht mit der produktiven Piwigo-Instanz.
 
@@ -8,6 +8,7 @@ Lesende, datensatzgebundene Piwigo-Galerie für Saltcorn. Zielumgebung: **Saltco
 - **Facility-Galerie:** Kacheln oder Liste, Seitenwechsel, vier Sortierungen und manuelle Aktualisierung.
 - **Bildunterschriften:** Separate Textvorlagen für Vorschau und Einzelbild, beispielsweise Aufnahmedatum, Dateiname, Beschreibung und Abmessungen.
 - **Bilddetails:** Konfigurierbare Bildvariante, Dialogbreite und maximale Bildhöhe; Vor-/Zurück-Blättern per Button oder Pfeiltaste, auch über Ergebnisseiten hinweg.
+- **Optionale Bildvergrößerung:** Pro View freischaltbare Zoom-Bedienleiste in der Einzelbildansicht, 100 bis 400 Prozent der eingepassten Vorschau, ohne weitere Bildabrufe.
 - **Admin-Fußzeile:** Feldnummer, Schlagwort und Tag-ID rechtsbündig neben der Seitennavigation. Auf schmalen Bildschirmen darunter; für normale Benutzer weder im HTML noch in der Listenantwort enthalten.
 - **Exakte Feldzuordnung:** Wählbares Saltcorn-Feld, z. B. `facilitynr="0042"`, wird 1:1 mit `[0042]` im Namen eines Piwigo-Schlagworts verglichen. Kein Auffüllen oder unscharfer Vergleich.
 - **Bestandsschutz:** Bereits vorhandene 0.1.0-Views behalten ihre manuelle Datensatz-ID/Tag-ID-Zuordnung, bis der Administrator ausdrücklich auf Feldzuordnung umstellt.
@@ -27,7 +28,7 @@ Das ZIP enthält den vollständigen Ordner `saltcorn-piwigo` einschließlich Tes
 Beispiel unter Linux, auszuführen mit dem Benutzer und der Umgebung der Saltcorn-Installation:
 
 ```sh
-unzip saltcorn-piwigo-0.3.0.zip -d /opt/saltcorn-plugins
+unzip saltcorn-piwigo-0.3.1.zip -d /opt/saltcorn-plugins
 saltcorn install-plugin -d /opt/saltcorn-plugins/saltcorn-piwigo
 ```
 
@@ -39,7 +40,19 @@ Es gibt keine eigenen Laufzeit-Fremdabhängigkeiten. Die Saltcorn-Module stammen
 
 Vorher Datenbank, Plugin-Konfiguration und View-Konfigurationen sichern. Den vorhandenen lokalen Plugin-Quellordner durch den Inhalt des neuen `saltcorn-piwigo`-Ordners ersetzen; Source und Location des bestehenden Plugin-Eintrags müssen auf diesen Ordner zeigen, nicht auf das ZIP oder dessen Elternverzeichnis.
 
-Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.3.0` sowie in den Bilddetails den Administrator-Button „Bildadresse prüfen“ kontrollieren.
+Beim Update muss auch die von Saltcorn geladene lokale Modulkopie gezielt erneuert werden; ein bloßer Austausch des Quellordners reicht bei bereits zwischengespeichertem Plugin nicht aus. Der konkrete Deploymentweg hängt von Source, Location und Laufzeitumgebung der vorhandenen Installation ab; anschließend Saltcorn neu starten und unter den Modulinformationen Version `0.3.1` sowie in den Bilddetails den Administrator-Button „Bildadresse prüfen“ kontrollieren.
+
+## Bildvergrößerung freigeben ab 0.3.1
+
+Unter **Views → gewünschte Piwigo-View → Configure** die Checkbox **„Vergrößern in der Einzelbildansicht erlauben“** aktivieren und speichern. Die Einstellung `detail_zoom` ist standardmäßig ausgeschaltet, auch bei bestehenden Views; nach Aktivierung steht sie allen berechtigten Betrachtern dieser View zur Verfügung, nicht nur Administratoren.
+
+- **Vergrößern / Verkleinern:** Stufen 100, 150, 200, 300 und 400 Prozent. 100 Prozent entspricht der eingepassten Ansicht, nicht der Originalauflösung.
+- **Einpassen:** Setzt die Ansicht auf 100 Prozent zurück. Auch Bildwechsel, Schließen und erneutes Öffnen starten wieder eingepasst.
+- **Ausschnitt verschieben:** Im vergrößerten Bildbereich scrollen, auf Touchgeräten wischen. Ist dieser Bereich per Tab fokussiert, verschieben Pfeiltasten den Ausschnitt; außerhalb des Bereichs bleibt die bisherige Einzelbildnavigation erhalten.
+- **Bildqualität:** Es wird nur die bereits geladene, konfigurierte Piwigo-Vorschau skaliert. Für schärfere Details gegebenenfalls eine größere Bildvariante wie `xlarge` konfigurieren; Zoomen erzeugt keine zusätzlichen Bilddetails und lädt keine Originaldatei nach.
+- **Deaktivieren:** Checkbox ausschalten und speichern; beim nächsten Laden der View entfällt die Zoom-Bedienleiste. Die Freigabe steuert die Plugin-Bedienung, nicht den allgemeinen Browser-Zoom oder einen Kopierschutz.
+
+Die konfigurierte maximale Bildhöhe begrenzt den sichtbaren Ausschnitt, nicht die vergrößerten Bildabmessungen innerhalb des Scrollbereichs. Die vorhandenen Datensatzrechte, Medienprüfung und Größenlimits bleiben unverändert.
 
 ## Neue Anzeigeoptionen ab 0.3.0
 
@@ -253,7 +266,7 @@ Eine Piwigo-Adresse der Form `https://piwigo.example.org/i.php?/piwigo-galleries
 
 Als Administrator eine betroffene Bildkarte öffnen und in den Bilddetails **„Bildadresse prüfen“** anklicken, auch wenn die Vorschau selbst fehlschlägt. Die Diagnose führt keinen Bildabruf aus; `allowed: true` bestätigt nur die URL-Prüfung, nicht Erreichbarkeit oder Bildinhalt.
 
-- **`plugin_version`:** Tatsächlich geladene Plugin-Version; erwartet wird `0.3.0`.
+- **`plugin_version`:** Tatsächlich geladene Plugin-Version; erwartet wird `0.3.1`.
 - **`api_base`:** Tatsächlich geladene Basis-Konfiguration, nicht nur ein eventuell noch nicht übernommener Formularwert.
 - **`returned`:** Herkunft und Pfad der jeweils ausgewählten API-Vorschau; `thumb` und `preview` werden getrennt geprüft.
 - **`reason`:** Konkreter Ablehnungsgrund bei Protokoll, Hostname, Port, Installationspfad oder Prozentkodierung.

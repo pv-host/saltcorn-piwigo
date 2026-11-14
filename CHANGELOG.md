@@ -1,5 +1,14 @@
 # Änderungen
 
+## 0.3.1
+
+Optionale Bildvergrößerung in der Einzelbildansicht. Die vorhandene Darstellung bleibt ohne ausdrückliche Aktivierung in der View-Konfiguration unverändert.
+
+- **Freigabe:** Neue Checkbox „Vergrößern in der Einzelbildansicht erlauben“, Standard aus; gilt für alle berechtigten Betrachter dieser View.
+- **Bedienung:** Vergrößern, Verkleinern, Einpassen; 100/150/200/300/400 Prozent, verschiebbarer Bildausschnitt. Bildwechsel und erneutes Öffnen setzen zurück.
+- **Sicherheit:** Nur lokale Skalierung der bereits geladenen Vorschau. Keine neuen API-Methoden, zusätzlichen Bildabrufe oder Originaldateien.
+- **Prüfung:** 207 automatisierte Tests bestanden; tatsächliches Speichern/Ausschalten der Checkbox, normaler Benutzer, Zoom-Grenzen, Fehlerfälle, Navigation und Desktop-/Mobilansicht lokal in Saltcorn 1.6.2 geprüft.
+
 ## 0.3.0
 
 Konfigurierbare Bildunterschriften und Einzelbilddarstellung sowie eine zurückhaltende Admin-Fußzeile. Verbindungsdaten, exakter vierstelliger Vergleich und rein lesender Zugriff bleiben erhalten.

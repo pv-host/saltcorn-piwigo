@@ -69,6 +69,8 @@ function makeView(pluginCfg) {
                 { name: "de_date", label: "TT.MM.JJJJ" }, { name: "de_datetime", label: "TT.MM.JJJJ HH:mm" }] } },
             { name: "detail_navigation", label: "Im Einzelbild vor- und zurückblättern", type: "Bool", default: true,
               sublabel: "Auch über Seitengrenzen, in der gewählten Sortierung. Pfeiltasten links/rechts werden ebenfalls unterstützt." },
+            { name: "detail_zoom", label: "Vergrößern in der Einzelbildansicht erlauben", type: "Bool", default: false,
+              sublabel: "Zeigt Vergrößern, Verkleinern und Einpassen für berechtigte Betrachter dieser View. Bis 400 % der eingepassten Vorschau; Ausschnitt durch Scrollen verschieben. Keine Originaldateien oder zusätzlichen Bildabrufe." },
             { name: "detail_size", label: "Piwigo-Bildvariante im Einzelbild", type: "String", default: "medium",
               attributes: { options: PREVIEW_SIZES },
               sublabel: "medium = Standard; large/xlarge/xxlarge für größere Bilder. Fehlt die Variante, wird eine kleinere verwendet. Keine Originaldateien; Größen hängen von Piwigo ab." },

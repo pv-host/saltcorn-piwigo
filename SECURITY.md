@@ -4,6 +4,8 @@ Das Plugin ist ein serverseitig vermittelter, lesender Zugang zu einer konfiguri
 
 ## Vertrauensgrenzen
 
+- **Zoom-Freigabe:** `detail_zoom` steuert ausschließlich die sichtbare Zoom-Funktion der View. Sie erweitert keine Bildzugriffsrechte und ist kein Schutz vor allgemeinem Browser-Zoom, Kopieren oder nachträglicher lokaler Bildverarbeitung. Vergrößert wird nur die bereits autorisiert ausgelieferte Vorschau.
+
 - **Anzeigevorlagen:** Ausschließlich Textsubstitution aus einer festen Metadatenliste; kein HTML, JavaScript oder Zugriff auf beliebige Datensatzfelder. Die Facility-Zuordnung einschließlich Schlagwortname/-ID wird nur Administratoren als Debug-Metadatum zurückgegeben.
 - **Einzelbildnavigation:** Auch Folgeseiten, Details und Medien durchlaufen dieselben serverseitigen Rechteprüfungen. Die gewünschte Bildvariante stammt aus der View-Konfiguration, nicht aus einem frei wählbaren Browserparameter; Originaldateien bleiben ausgeschlossen.
 

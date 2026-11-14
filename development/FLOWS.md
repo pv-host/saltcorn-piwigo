@@ -1,5 +1,14 @@
 # Bedienabläufe und Abnahme 0.2.0
 
+## Erweiterung 0.3.1: Freigegebene Bildvergrößerung
+- Bestand vor Änderung geöffnet: Bild, Bildunterschrift und Einzelbildnavigation funktionieren.
+- View-Checkbox „Vergrößern in der Einzelbildansicht erlauben“ standardmäßig aus; speichern, wieder öffnen, aktivieren und deaktivieren.
+- Ohne Freigabe keine Zoom-Bedienleiste; mit Freigabe auch für normale berechtigte Benutzer sichtbar.
+- Zoom 100/150/200/300/400 %, Grenzen, Verkleinern und Einpassen; Scrollen im Bildausschnitt statt zusätzlicher Netzabrufe.
+- Beim nächsten Bild, Schließen und Wiederöffnen wieder 100 %. Pfeiltasten im fokussierten vergrößerten Bildbereich verschieben den Ausschnitt statt das Bild zu wechseln.
+- Mobile Breite 375 px, Größenänderung bei aktivem Zoom, fehlgeschlagene Medienantwort: keine Überbreite oder aktiven Zoomknöpfe ohne Bild.
+- Die bestehenden Hauptabläufe und development/browser-regression.js erneut prüfen.
+
 ## Erweiterung 0.3.0: Anzeige und Einzelbildnavigation
 - Administrator: Zuordnung rechtsbündig neben der Seitennavigation, mobil darunter. Normale Benutzer erhalten weder Element noch Zuordnungsdaten.
 - Separate Vorlagen für Vorschau und Einzelbild speichern, wieder öffnen und mit Aufnahmedatum, Dateiname, Beschreibung und Abmessungen prüfen. Leere Vorlage blendet die Unterschrift aus; HTML bleibt Text.

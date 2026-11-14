@@ -1,6 +1,20 @@
-# Prüfbericht: saltcorn-piwigo 0.3.0
+# Prüfbericht: saltcorn-piwigo 0.3.1
 
-Prüfdatum: 13. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Plugin-Paket; es wurde weder im Produktiv-Saltcorn installiert noch mit der produktiven Piwigo-Instanz verbunden.
+Prüfdatum der Zoom-Erweiterung: 14. November 2026. Die Ergebnisse beziehen sich auf dieses lokale Plugin-Paket; es wurde weder im Produktiv-Saltcorn installiert noch mit der produktiven Piwigo-Instanz verbunden.
+
+## Abnahme der Zoom-Freigabe 0.3.1
+
+207 automatisierte Tests bestanden, ohne ausgelassene Tests. Der Lauf steht in `development/evidence/unit-tests-0.3.1.tap`; die wiederholbare Zoom-Browserprüfung liegt in `development/zoom-regression.js`.
+
+- **View-Konfiguration:** Checkbox aktiviert, gespeichert, wieder geöffnet und ausgeschaltet; ohne Freigabe keine Zoom-Bedienleiste.
+- **Berechtigte Betrachter:** Normaler Benutzer kann nach Freigabe zoomen, erhält aber weiterhin keine Admin-Zuordnungszeile; fremder Datensatz bleibt gesperrt.
+- **Zoom-Bedienung:** Sämtliche Stufen und Grenzen, Verkleinern und Einpassen geprüft. Vergrößerter Ausschnitt scrollbar, Pfeiltaste im fokussierten Bildbereich löst keinen Bildwechsel aus.
+- **Rücksetzen:** Nach Bildwechsel und Schließen/Wiederöffnen wieder 100 Prozent.
+- **Medienzugriff:** Dieselbe Blob-Bildadresse beim Zoomen; keine neue Preview-Anfrage. Bei synthetischem Medienfehler bleiben alle Zoomknöpfe deaktiviert, Admin-Diagnose bleibt erreichbar.
+- **Responsive Ansicht:** Desktop 1280 × 900 und mobil 375 × 812, einschließlich Fensterverkleinerung bei aktivem 200-%-Zoom; keine horizontale Überbreite von Seite oder Dialog. Bildausschnitt hat absichtlich eigene Scrollbereiche.
+- **Regression:** `development/browser-regression.js` bestanden; Galerie-Pagination, Liste/Kacheln, Aktualisierung, Diagnose, Tag-Suche sowie Legacy-View und deren fehlende Zuordnung erneut geprüft. Keine JavaScript-Pageerrors.
+
+Die Nachweise `v031-desktop-zoom.png` und `v031-mobile-zoom.png` zeigen ausdrücklich synthetische Bilder. Die nachfolgenden Abschnitte dokumentieren die bisherigen Versionen; deren Testläufe bleiben zur Nachvollziehbarkeit erhalten.
 
 ## Ergebnis
 
